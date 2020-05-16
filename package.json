@@ -1,0 +1,28 @@
+{
+  "name": "npm-visualization",
+  "version": "0.0.0",
+  "description": "a visualization of some npm library stats",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "ts-node-dev --respawn --transpileOnly ./app/app.ts",
+    "prod": "tsc && node ./build/app.js"
+  },
+  "author": "mdctleo",
+  "license": "MIT",
+  "dependencies": {
+    "@types/superagent": "^4.1.7",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
+    "changes-stream": "^2.2.0",
+    "express": "^4.17.1",
+    "promise": "^8.1.0",
+    "request": "^2.88.2",
+    "superagent": "^5.2.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
