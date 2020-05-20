@@ -43,6 +43,7 @@ export class API {
         }
     }
 
+
     public async getPackage (packageName: string): Promise<any> {
         try {
             let url = `${this.API_BASE}/${packageName}`
@@ -55,17 +56,17 @@ export class API {
         }
     }
 
-    public async getPackage (packageName: string, version: string): Promise<any> {
-        try {
-            let url = `${this.API_BASE}/${packageName}/${version}`
-            let response = await request.get(url)
-            console.log(response.body)
-            return response
-        } catch (err) {
-            console.log("get package version failed")
-            console.log(err)
-        }
-    }
+    // public async getPackage (packageName: string, version: string): Promise<any> {
+    //     try {
+    //         let url = `${this.API_BASE}/${packageName}/${version}`
+    //         let response = await request.get(url)
+    //         console.log(response.body)
+    //         return response
+    //     } catch (err) {
+    //         console.log("get package version failed")
+    //         console.log(err)
+    //     }
+    // }
 
     public async search(text: string, size=20, from=0,
                         quality=0, popularity=1, maintenance=0): Promise<any> {

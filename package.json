@@ -11,6 +11,7 @@
   "author": "mdctleo",
   "license": "MIT",
   "dependencies": {
+    "@types/express": "^4.17.6",
     "@types/superagent": "^4.1.7",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",
@@ -21,8 +22,5 @@
     "superagent": "^5.2.2",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.3"
   }
 }
