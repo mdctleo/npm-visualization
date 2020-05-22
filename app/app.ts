@@ -10,7 +10,10 @@ const API_BASE = `https://registry.npmjs.org`
 
 let api = new API(API_BASE, DOWNLOAD_API)
 
+app.get('/getDownloads', (req, res) =>  console.log("got here"))
+
 app.listen(port, () => console.log(`backend listening at http://localhost:${port}`))
+
 
 // api.getDownloads("2020-04-01:2020-04-20", ["express", "jquery"])
 // api.getRegistryMeta()

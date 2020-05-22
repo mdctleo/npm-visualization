@@ -1,5 +1,9 @@
 import React from "react";
 import * as d3 from 'd3'
+import { connect } from 'react-redux'
+import { createStructuredSelector } from 'reselect'
+import {fetchPackageDownload, getPackageDownload} from "./action"
+import { compose } from 'redux'
 
 class DownloadChart extends React.Component {
 
@@ -12,6 +16,7 @@ class DownloadChart extends React.Component {
     }
 
     componentDidMount() {
+        this.props.getPackageDownload("express")
         this.createDownloadChart()
     }
     // componentDidUpdate() {
@@ -78,4 +83,21 @@ class DownloadChart extends React.Component {
     }
 };
 
-export default DownloadChart
+const mapStateToProps = createStructuredSelector({
+
+})
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getPackageDownload: (packageName) => dispatch(fetchPackageDownload(packageName))
+    }
+}
+
+const withConnect = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)
+
+export default compose(
+    withConnect
+)(DownloadChart)
