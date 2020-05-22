@@ -11,11 +11,13 @@
   "author": "mdctleo",
   "license": "MIT",
   "dependencies": {
+    "@types/cors": "^2.8.6",
     "@types/express": "^4.17.6",
     "@types/superagent": "^4.1.7",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",
     "changes-stream": "^2.2.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "promise": "^8.1.0",
     "request": "^2.88.2",

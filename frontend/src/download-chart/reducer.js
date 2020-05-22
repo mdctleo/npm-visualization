@@ -1,18 +1,22 @@
+import { RECEIVE_PACKAGE_DOWNLOAD, GET_PCAKGE_DOWNLOAD } from "./action";
+
 const todos = (state = [], action) => {
     switch (action.type) {
-        case 'ADD_TODO':
+        case RECEIVE_PACKAGE_DOWNLOAD:
             return [
                 ...state,
                 {
-                    id: action.id,
-                    text: action.text,
-                    completed: false
+                    isFetching: false,
+                    data: action.data
                 }
             ]
-        case 'TOGGLE_TODO':
-            return state.map(todo =>
-                todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
-            )
+        case GET_PCAKGE_DOWNLOAD:
+            return [
+                ...state,
+                {
+                    isFetching: true
+                }
+            ]
         default:
             return state
     }

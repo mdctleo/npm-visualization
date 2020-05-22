@@ -21,14 +21,8 @@ export class API {
 
         console.log(url)
 
-        try {
-            let result = await request.get(url)
-            console.log(result.body)
-        } catch (err) {
-            console.log("failed to get data")
-            console.log(err.message)
-
-        }
+        let result = await request.get(url)
+        return result.body
 
     }
 

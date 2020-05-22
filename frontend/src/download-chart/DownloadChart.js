@@ -16,7 +16,7 @@ class DownloadChart extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getPackageDownload("express")
+        this.props.getPackageDownload("express", "2017-01-01", "2017-02-01")
         this.createDownloadChart()
     }
     // componentDidUpdate() {
@@ -89,7 +89,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => {
     return {
-        getPackageDownload: (packageName) => dispatch(fetchPackageDownload(packageName))
+        getPackageDownload: (packageName, start, end) => dispatch(fetchPackageDownload(packageName, start, end))
     }
 }
 

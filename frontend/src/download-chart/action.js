@@ -23,8 +23,12 @@ export const fetchPackageDownload = (packageName, start, end) => {
         dispatch(getPackageDownload(packageName, start, end))
         let url = "http://localhost:8000/getDownloads"
         return request.get(url)
+            .query(`packageName=${packageName}`)
+            .query(`start=${start}`)
+            .query(`end=${end}`)
             .then(response => {
-                dispatch(receivePackageDownload(packageName, response.body))
+                console.log(response)
+                dispatch(receivePackageDownload(packageName, response))
             })
             .catch(err => {
                 console.log(err)
