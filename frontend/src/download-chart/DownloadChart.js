@@ -4,11 +4,13 @@ import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import {fetchPackageDownload, getPackageDownload} from "./action"
 import { compose } from 'redux'
+import {selectDownloadChart, selectDownloadData} from "./selectors";
 
 class DownloadChart extends React.Component {
 
     constructor(props){
         super(props)
+        console.log(props.downloadData)
         this.createDownloadChart = this.createDownloadChart.bind(this)
         this.width = this.props.width - this.props.margin.left - this.props.margin.right
         this.height = this.props.height - this.props.margin.top - this.props.margin.bottom
@@ -83,9 +85,11 @@ class DownloadChart extends React.Component {
     }
 };
 
-const mapStateToProps = createStructuredSelector({
-
-})
+const mapStateToProps = state => {
+    return {
+        downloadData: selectDownloadData()
+    }
+}
 
 const mapDispatchToProps = dispatch => {
     return {

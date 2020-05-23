@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import downloadChartReducer from './download-chart/reducer'
+import downloadChart from './download-chart/reducer'
 
 export default combineReducers({
-    downloadChartReducer,
+    downloadChart,
 })

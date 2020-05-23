@@ -1,25 +1,25 @@
 import { RECEIVE_PACKAGE_DOWNLOAD, GET_PCAKGE_DOWNLOAD } from "./action";
 
-const todos = (state = [], action) => {
+export const initialState = {
+    isFetching: false,
+    data: []
+}
+
+const downloadChart = (state = initialState, action) => {
     switch (action.type) {
         case RECEIVE_PACKAGE_DOWNLOAD:
-            return [
-                ...state,
-                {
-                    isFetching: false,
-                    data: action.data
-                }
-            ]
+            return Object.assign({}, state, {
+                isFetching: false,
+                data: action.data
+            })
         case GET_PCAKGE_DOWNLOAD:
-            return [
+            return {
                 ...state,
-                {
-                    isFetching: true
-                }
-            ]
+                isFetching: true
+            }
         default:
             return state
     }
 }
 
-export default todos
+export default downloadChart

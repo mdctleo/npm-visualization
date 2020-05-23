@@ -27,8 +27,7 @@ export const fetchPackageDownload = (packageName, start, end) => {
             .query(`start=${start}`)
             .query(`end=${end}`)
             .then(response => {
-                console.log(response)
-                dispatch(receivePackageDownload(packageName, response))
+                dispatch(receivePackageDownload(packageName, response.body))
             })
             .catch(err => {
                 console.log(err)
