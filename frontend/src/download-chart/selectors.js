@@ -1,10 +1,11 @@
 import { createSelector } from 'reselect'
 import { initialState } from './reducer'
 
-const selectDownloadChart = state => console.log(state)
+const selectDownloadChart = state => state.downloadChart || initialState
+
 const selectDownloadData = () => createSelector(
     selectDownloadChart,
-    downloadChart => downloadChart.data
+    downloadChart => downloadChart.downloadData
 )
 
-export { selectDownloadChart, selectDownloadData}
+export {selectDownloadChart, selectDownloadData}

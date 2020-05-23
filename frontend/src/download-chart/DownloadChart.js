@@ -10,7 +10,6 @@ class DownloadChart extends React.Component {
 
     constructor(props){
         super(props)
-        console.log(props.downloadData)
         this.createDownloadChart = this.createDownloadChart.bind(this)
         this.width = this.props.width - this.props.margin.left - this.props.margin.right
         this.height = this.props.height - this.props.margin.top - this.props.margin.bottom
@@ -19,61 +18,66 @@ class DownloadChart extends React.Component {
 
     componentDidMount() {
         this.props.getPackageDownload("express", "2017-01-01", "2017-02-01")
+    }
+
+    componentDidUpdate(prevProps, prevState, snapShot) {
         this.createDownloadChart()
     }
-    // componentDidUpdate() {
-    //     this.createDownloadChart()
-    // }
-
     createDownloadChart() {
-        const node = this.node
-        
-        const xScale = d3.scaleTime()
-            .domain([this.props.data.start, this.props.data.end])
-            .range([0, this.width])
-        const yScale = d3.scaleLinear()
-            .domain([0, this.props.data.maxDownload])
-            .range([this.height, 0])
 
-        const g = d3.select(node)
-            .append("g")
-            .attr("transform", "translate(" + this.props.margin.left + "," + this.props.margin.top + ")")
+        console.log("got to rendered")
+        console.log(this.props)
+        if (this.props.downloadChart.downloadData.length > 0) {
+            console.log("got to rendered with information")
+            const node = this.node
 
-        g.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + this.height + ")")
-            .call(d3.axisBottom(xScale))
+            const xScale = d3.scaleTime()
+                .domain([new Date(this.props.downloadChart.start), new Date(this.props.downloadChart.end)])
+                .range([0, this.width])
+            const yScale = d3.scaleLinear()
+                .domain([0, this.props.downloadChart.maxDownload])
+                .range([this.height, 0])
 
-        // Create Y Axis
-        // Add Text label to Y axis
-        g.append("g")
-            .attr("class", "axis axis--y")
-            .call(d3.axisLeft(yScale))
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", "0.71em")
-            .attr("fill", "#000")
-            .text("Download Counts")
+            const g = d3.select(node)
+                .append("g")
+                .attr("transform", "translate(" + this.props.margin.left + "," + this.props.margin.top + ")")
 
-        let line = d3.line()
-            .x(d => xScale(d.date) )
-            .y(d => yScale(d.value) )
+            g.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", "translate(0," + this.height + ")")
+                .call(d3.axisBottom(xScale))
 
-        let packageGroup = g
-            .selectAll(".package")
-            .data(this.props.data.packages)
-            .enter()
-            .append("g")
-            .attr("class", "package")
+            // Create Y Axis
+            // Add Text label to Y axis
+            g.append("g")
+                .attr("class", "axis axis--y")
+                .call(d3.axisLeft(yScale))
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", "0.71em")
+                .attr("fill", "#000")
+                .text("Download Counts")
 
-        packageGroup
-            .append("path")
-            .attr("class", "line")
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 1.5)
-            .attr("d", d => line(d.values))
+            let line = d3.line()
+                .x(d => xScale(new Date(d.day)))
+                .y(d => yScale(d.downloads))
+
+            let packageGroup = g
+                .selectAll(".package")
+                .data(this.props.downloadChart.downloadData)
+                .enter()
+                .append("g")
+                .attr("class", "package")
+
+            packageGroup
+                .append("path")
+                .attr("class", "line")
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 1.5)
+                .attr("d", d => line(d.downloads))
+        }
     }
 
     render() {
@@ -85,11 +89,22 @@ class DownloadChart extends React.Component {
     }
 };
 
+// const mapStateToProps = state => {
+//     return {
+//         downloadData: selectDownloadData()
+//     }
+// }
+
 const mapStateToProps = state => {
     return {
-        downloadData: selectDownloadData()
+        downloadChart: selectDownloadChart(state),
+        downloadData: selectDownloadData(state)
     }
 }
+
+// const mapStateToProps = createStructuredSelector({
+//     downloadData: selectDownloadData()
+// })
 
 const mapDispatchToProps = dispatch => {
     return {

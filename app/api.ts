@@ -19,9 +19,19 @@ export class API {
             }
         }
 
-        console.log(url)
-
         let result = await request.get(url)
+
+        result.body.start = new Date(result.body.start)
+        result.body.end = new Date(result.body.end)
+
+        let totalCount = 0
+        for (let dataPoint of result.body.downloads) {
+            dataPoint.day = new Date(dataPoint.day)
+            totalCount += dataPoint.downloads
+        }
+
+        result.body.maxDownload = totalCount
+
         return result.body
 
     }

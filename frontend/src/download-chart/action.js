@@ -10,11 +10,14 @@ export const getPackageDownload = (packageName, start, end) => ({
     end
 })
 
-export const receivePackageDownload = (packageName, data) =>  {
+export const receivePackageDownload = (data) =>  {
     return {
         type: RECEIVE_PACKAGE_DOWNLOAD,
-        packageName,
-        data
+        start: data.start,
+        end: data.end,
+        maxDownload: data.maxDownload,
+        name: data.package,
+        downloads: data.downloads
     }
 }
 
@@ -27,7 +30,7 @@ export const fetchPackageDownload = (packageName, start, end) => {
             .query(`start=${start}`)
             .query(`end=${end}`)
             .then(response => {
-                dispatch(receivePackageDownload(packageName, response.body))
+                dispatch(receivePackageDownload(response.body))
             })
             .catch(err => {
                 console.log(err)
