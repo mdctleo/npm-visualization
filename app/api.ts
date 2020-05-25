@@ -24,13 +24,13 @@ export class API {
         result.body.start = new Date(result.body.start)
         result.body.end = new Date(result.body.end)
 
-        let totalCount = 0
+        let maxCount = 0
         for (let dataPoint of result.body.downloads) {
             dataPoint.day = new Date(dataPoint.day)
-            totalCount += dataPoint.downloads
+            maxCount = dataPoint.downloads > maxCount? dataPoint.downloads : maxCount
         }
 
-        result.body.maxDownload = totalCount
+        result.body.maxDownload = maxCount
 
         return result.body
 
