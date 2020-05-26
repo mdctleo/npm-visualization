@@ -11,3 +11,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.focus {
+  opacity: 0.7;
+}
+
+.focus circle {
+  fill: none;
+  stroke: black;
+}
+
+.focus line {
+  fill: none;
+  stroke: black;
+  stroke-width: 1.5px;
+  stroke-dasharray: 3;
+}

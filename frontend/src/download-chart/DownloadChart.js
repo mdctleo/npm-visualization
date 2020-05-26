@@ -1,5 +1,6 @@
 import React from "react";
 import * as d3 from 'd3'
+import { least, bisectDate } from 'd3-array'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import {fetchPackageDownload, getPackageDownload} from "./action"
@@ -17,7 +18,7 @@ class DownloadChart extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getPackageDownload("express", "2016-01-01", "2016-03-01")
+        this.props.getPackageDownload("express,react", "2016-01-01", "2016-03-01")
     }
 
     componentDidUpdate(prevProps, prevState, snapShot) {
@@ -29,7 +30,7 @@ class DownloadChart extends React.Component {
             const node = this.node
 
             this.xScale = d3.scaleUtc()
-                .domain([new Date(this.props.downloadChart.start), new Date(this.props.downloadChart.end)])
+                .domain([this.props.downloadChart.start, this.props.downloadChart.end])
                 // .domain(d3.extent(this.props.downloadChart.downloadData, d => d.day))
                 .range([0, this.width])
 
@@ -60,7 +61,7 @@ class DownloadChart extends React.Component {
                 .text("Download Counts")
 
             let line = d3.line()
-                .x(d => this.xScale(new Date(d.day)))
+                .x(d => this.xScale(d.day))
                 .y(d => this.yScale(d.downloads))
 
             let packageGroup = g
@@ -70,18 +71,6 @@ class DownloadChart extends React.Component {
                 .append("g")
                 .attr("class", "package")
 
-            const dot = d3.select(node).append("g")
-                .attr("display", "none")
-
-            dot.append("circle")
-                .attr("r", 2.5)
-
-            dot.append("text")
-                .attr("font-family", "sans-serif")
-                .attr("font-size", 10)
-                .attr("text-anchor", "middle")
-                .attr("y", -8)
-
             packageGroup
                 .append("path")
                 .attr("id", d => d.name)
@@ -90,38 +79,58 @@ class DownloadChart extends React.Component {
                 .attr("stroke", "steelblue")
                 .attr("stroke-width", 1.5)
                 .attr("d", d => line(d.downloads))
-                .on("mousemove", d => this.moved(d.name, d.downloads, dot))
-                .on("mouseenter", d => this.entered(dot, d.name))
-                .on("mouseleave", d => this.left(dot, d.name))
 
+            const focus = d3.select(node).append('g')
+                .attr('class', 'focus')
+                .style('display', 'none');
 
+            focus.append('circle')
+                .attr('r', 4.5);
+
+            focus.append('line')
+                .classed('x', true);
+
+            focus.append('line')
+                .classed('y', true);
+
+            focus.append('text')
+                .attr('x', 9)
+                .attr('dy', '.35em');
+
+            d3.select(node).append('rect')
+                .attr('class', 'overlay')
+                .attr('width', this.width)
+                .attr('height', this.height)
+                .attr("transform", "translate(" + this.props.margin.left + "," + this.props.margin.top + ")")
+                .on('mouseover', () => focus.style('display', null))
+                .on('mouseout', () => focus.style('display', 'none'))
+                .on('mousemove', () => this.mousemove(focus));
         }
     }
 
-    entered(dot, name) {
-        // d3.select(`#${name}`).style("mix-blend-mode", null).attr("stroke", "#ddd");
-        dot.attr("display", null)
-    }
+    mousemove(focus) {
+        const bisectDate = d3.bisector(d => d.day).left;
+        const data = this.props.downloadChart.downloadData[0].downloads
 
-    moved(name, downloads, dot) {
-        d3.event.preventDefault()
-        const mouse = d3.mouse(this.node)
-        const xm = this.xScale.invert(mouse[0])
-        const ym = this.yScale.invert(mouse[1])
+        const x0 = this.xScale.invert(d3.mouse(this.node)[0]);
+        const i = bisectDate(data, x0, 1);
+        const d0 = data[i - 1];
+        const d1 = data[i];
+        const d = x0 - d0.day > d1.day - x0 ? d1 : d0;
+        focus.attr('transform', `translate(${this.props.margin.left + this.xScale(d.day)}, ${this.props.margin.top + this.yScale(d.downloads)})`);
+        focus.select('line.x')
+            .attr('x1', 0)
+            .attr('x2', -this.xScale(d.day))
+            .attr('y1', 0)
+            .attr('y2', 0);
 
-        const i1 = d3.bisectLeft(downloads, xm, 1)
-        const i0 = i1 - 1
-        const i = xm - downloads[i0] > downloads[i1] - xm? i1: i0
-        const s = d3.min(downloads, d => Math.abs(d.downloads[i] - ym))
+        focus.select('line.y')
+            .attr('x1', 0)
+            .attr('x2', 0)
+            .attr('y1', 0)
+            .attr('y2', this.height - this.yScale(d.downloads));
 
-        d3.select(`#${name}`).attr("stroke", d => d === s ? null : "#ddd").filter(d => d === s).raise();
-        dot.attr("transform", `translate(${this.xScale(new Date(downloads[i].day))},${this.yScale(downloads[i].downloads)})`)
-        dot.select("text").text(name)
-    }
-
-    left(dot, name) {
-        // d3.select(`#${name}`).style("mix-blend-mode", "multiply").attr("stroke", null);
-        dot.attr("display", "none")
+        focus.select('text').text(d.downloads);
     }
 
 

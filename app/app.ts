@@ -15,7 +15,7 @@ let api = new API(API_BASE, DOWNLOAD_API)
 
 app.get('/getDownloads', (req, res) => {
     let period: string = `${req.query.start}:${req.query.end}`
-    let packageNames: Array<string> = [String(req.query.packageName)]
+    let packageNames: string = String(req.query.packageName)
     api.getDownloads(period, packageNames)
         .then((result) => {
             console.log(result)

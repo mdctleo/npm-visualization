@@ -1,5 +1,6 @@
 import * as request from "superagent"
 import * as fs from "fs"
+import {isNumber} from "util";
 export class API {
     API_BASE: string
     DOWNLOAD_API: string
@@ -8,31 +9,47 @@ export class API {
         this.DOWNLOAD_API = downloadAPI
     }
     // argument example /downloads/point/2014-02-01:2014-02-08/express
-    public async getDownloads(period: string, packageNames: Array<string>): Promise<any>{
+    public async getDownloads(period: string, packageNames: string): Promise<any>{
         let url =`${this.DOWNLOAD_API}/range/${period}/`
 
-        for (const [i, packageName] of packageNames.entries()) {
-            if (i !== packageNames.length - 1) {
-                url += `${packageName},`
-            } else {
-                url += `${packageName}`
-            }
-        }
+        url += `${packageNames}`
+
+        // for (const [i, packageName] of packageNames.entries()) {
+        //     if (i !== packageNames.length - 1) {
+        //         url += `${packageName},`
+        //     } else {
+        //         url += `${packageName}`
+        //     }
+        // }
 
         let result = await request.get(url)
 
-        result.body.start = new Date(result.body.start)
-        result.body.end = new Date(result.body.end)
+        let mresult = {
+            maxCount: 0,
+            start: "",
+            end: "",
+            data: []
+        }
+        console.log(result.body)
 
         let maxCount = 0
-        for (let dataPoint of result.body.downloads) {
-            dataPoint.day = new Date(dataPoint.day)
-            maxCount = dataPoint.downloads > maxCount? dataPoint.downloads : maxCount
+        let data: Array<any> = []
+        for (let [packageName, pack] of Object.entries(result.body)) {
+            mresult.start = result.body[packageName].start
+            mresult.end = result.body[packageName].end
+            delete result.body[packageName].start
+            delete result.body[packageName].end
+            for (let dataPoint of pack.downloads) {
+                maxCount = dataPoint.downloads > maxCount ? dataPoint.downloads : maxCount
+            }
+
+            data.push(result.body[packageName])
         }
 
-        result.body.maxDownload = maxCount
+        mresult.maxCount = maxCount
+        mresult.data = data
 
-        return result.body
+        return mresult
 
     }
 

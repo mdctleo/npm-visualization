@@ -21,15 +21,16 @@ export const receivePackageDownload = (data) =>  {
     }
 }
 
-export const fetchPackageDownload = (packageName, start, end) => {
+export const fetchPackageDownload = (packageNames, start, end) => {
     return dispatch => {
-        dispatch(getPackageDownload(packageName, start, end))
+        dispatch(getPackageDownload(packageNames, start, end))
         let url = "http://localhost:8000/getDownloads"
         return request.get(url)
-            .query(`packageName=${packageName}`)
+            .query(`packageName=${packageNames}`)
             .query(`start=${start}`)
             .query(`end=${end}`)
             .then(response => {
+                console.log(response.body)
                 dispatch(receivePackageDownload(response.body))
             })
             .catch(err => {

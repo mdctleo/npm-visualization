@@ -14,11 +14,11 @@ const downloadChart = (state = initialState, action) => {
             return {
                 ...state,
                 isFetching: false,
-                start: action.start,
-                end: action.end,
+                start: new Date(action.start),
+                end: new Date(action.end),
                 maxDownload: action.maxDownload > state.maxDownload || state.maxDownload === undefined ? action.maxDownload : state.maxDownload,
                 downloadData: [...state.downloadData,
-                    {name: action.name, downloads: action.downloads}
+                    {name: action.name, downloads: action.downloads.map((d) => {return {day: new Date(d.day), downloads: d.downloads}})}
                 ]
             }
         case GET_PCAKGE_DOWNLOAD:
