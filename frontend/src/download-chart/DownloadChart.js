@@ -2,7 +2,6 @@ import React from "react";
 import * as d3 from 'd3'
 import { least, bisectDate } from 'd3-array'
 import { connect } from 'react-redux'
-import { createStructuredSelector } from 'reselect'
 import {fetchPackageDownload, getPackageDownload} from "./action"
 import { compose } from 'redux'
 import {selectDownloadChart, selectDownloadData} from "./selectors";
@@ -25,7 +24,6 @@ class DownloadChart extends React.Component {
         this.createDownloadChart()
     }
     createDownloadChart() {
-
         if (this.props.downloadChart.downloadData.length > 0) {
             const node = this.node
 
@@ -148,11 +146,6 @@ class DownloadChart extends React.Component {
     }
 };
 
-// const mapStateToProps = state => {
-//     return {
-//         downloadData: selectDownloadData()
-//     }
-// }
 
 const mapStateToProps = state => {
     return {
@@ -160,10 +153,6 @@ const mapStateToProps = state => {
         downloadData: selectDownloadData(state)
     }
 }
-
-// const mapStateToProps = createStructuredSelector({
-//     downloadData: selectDownloadData()
-// })
 
 const mapDispatchToProps = dispatch => {
     return {
