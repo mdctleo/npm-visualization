@@ -10,14 +10,13 @@ export const getPackageDownload = (packageName, start, end) => ({
     end
 })
 
-export const receivePackageDownload = (data) =>  {
+export const receivePackageDownload = (responseBody) =>  {
     return {
         type: RECEIVE_PACKAGE_DOWNLOAD,
-        start: data.start,
-        end: data.end,
-        maxDownload: data.maxDownload,
-        name: data.package,
-        downloads: data.downloads
+        start: responseBody.start,
+        end: responseBody.end,
+        maxDownload: responseBody.maxCount,
+        data: responseBody.data
     }
 }
 
@@ -30,7 +29,11 @@ export const fetchPackageDownload = (packageNames, start, end) => {
             .query(`start=${start}`)
             .query(`end=${end}`)
             .then(response => {
-                console.log(response.body)
+                response.body.data.forEach((d) => {
+                    d.downloads.forEach((dataPoint) => {
+                        dataPoint.day = new Date(dataPoint.day)
+                    })
+                })
                 dispatch(receivePackageDownload(response.body))
             })
             .catch(err => {

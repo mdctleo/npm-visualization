@@ -17,9 +17,7 @@ const downloadChart = (state = initialState, action) => {
                 start: new Date(action.start),
                 end: new Date(action.end),
                 maxDownload: action.maxDownload > state.maxDownload || state.maxDownload === undefined ? action.maxDownload : state.maxDownload,
-                downloadData: [...state.downloadData,
-                    {name: action.name, downloads: action.downloads.map((d) => {return {day: new Date(d.day), downloads: d.downloads}})}
-                ]
+                downloadData: action.data
             }
         case GET_PCAKGE_DOWNLOAD:
             return {
