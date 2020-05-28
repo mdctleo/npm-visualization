@@ -5,12 +5,10 @@ import { selectPackageNames } from '../inputs/selectors'
 
 
 const Tags = ({packageNames}) => {
-
-    console.log(packageNames)
     return (
         <div>
             {packageNames.map((packageName) => {
-                return <Tag id={packageName} color="magenta">{packageName}</Tag>
+                return <Tag key={packageName} color="magenta">{packageName}</Tag>
             })}
         </div>
     )

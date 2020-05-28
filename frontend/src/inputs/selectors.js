@@ -23,4 +23,17 @@ const selectPackageNames = createSelector(
 //     downloadChart => downloadChart.downloadData
 // )
 
-export {selectStartDate, selectEndDate, selectPackageNames}
+// const selectDownloadChart = state => state.downloadChart || initialState
+
+const selectDownloadData = createSelector(
+    selectInputs,
+    inputs => inputs.downloadData
+)
+
+const selectMaxDownload = createSelector(
+    selectInputs,
+    inputs => inputs.maxDownload
+)
+
+
+export {selectStartDate, selectEndDate, selectPackageNames, selectDownloadData, selectMaxDownload}

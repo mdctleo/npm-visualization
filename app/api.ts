@@ -14,14 +14,6 @@ export class API {
 
         url += `${packageNames}`
 
-        // for (const [i, packageName] of packageNames.entries()) {
-        //     if (i !== packageNames.length - 1) {
-        //         url += `${packageName},`
-        //     } else {
-        //         url += `${packageName}`
-        //     }
-        // }
-
         let result = await request.get(url)
 
         let mresult = {
@@ -30,20 +22,30 @@ export class API {
             end: "",
             data: []
         }
-        console.log(result.body)
 
         let maxCount = 0
         let data: Array<any> = []
-        for (let [packageName, pack] of Object.entries(result.body)) {
-            mresult.start = result.body[packageName].start
-            mresult.end = result.body[packageName].end
-            delete result.body[packageName].start
-            delete result.body[packageName].end
-            for (let dataPoint of pack.downloads) {
-                maxCount = dataPoint.downloads > maxCount ? dataPoint.downloads : maxCount
+
+        if (packageNames.split(",").length > 1) {
+
+            for (let [packageName, pack] of Object.entries(result.body)) {
+                mresult.start = result.body[packageName].start
+                mresult.end = result.body[packageName].end
+                // console.log(pack)
+                delete result.body[packageName].start
+                delete result.body[packageName].end
+                for (let dataPoint of pack.downloads) {
+                    maxCount = dataPoint.downloads > maxCount ? dataPoint.downloads : maxCount
+                }
+
+                data.push(result.body[packageName])
             }
 
-            data.push(result.body[packageName])
+        } else {
+            for (let dataPoint of result.body.downloads) {
+                maxCount = dataPoint.downloads > maxCount ? dataPoint.downloads : maxCount
+            }
+            data = [{package: result.body.package, downloads: result.body.downloads}]
         }
 
         mresult.maxCount = maxCount

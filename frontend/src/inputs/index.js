@@ -3,8 +3,8 @@ import React from "react";
 import { Input } from 'antd';
 import { connect } from 'react-redux'
 import {compose} from "redux";
-import {setSearch, setSearchDate} from "./action";
-import {selectEndDate, selectStartDate} from "./selectors";
+import {setSearch, setSearchDate, fetchPackageDownload} from "./action";
+import {selectEndDate, selectPackageNames, selectStartDate} from "./selectors";
 import moment from 'moment';
 
 const { RangePicker } = DatePicker;
@@ -16,6 +16,10 @@ class Inputs extends React.Component {
         super(props)
     }
 
+    componentDidMount() {
+        // this.props.getPackages(this.props.packageNames, this.props.start, this.props.end)
+    }
+
     render() {
         return (
             <div>
@@ -23,6 +27,7 @@ class Inputs extends React.Component {
                     placeholder="input search text"
                     onSearch={(value, event) => {
                         this.props.setSearch(value)
+                        this.props.getPackages(value, this.props.start, this.props.end)
                     }}
                     style={{ width: 200, marginRight: 20}}
                 />
@@ -38,14 +43,16 @@ class Inputs extends React.Component {
 const mapStateToProps = state => {
     return {
         start: selectStartDate(state),
-        end: selectEndDate(state)
+        end: selectEndDate(state),
+        packageNames: selectPackageNames(state)
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         setSearchDate: (start, end) => dispatch(setSearchDate(start, end)),
-        setSearch: (packageName) => dispatch(setSearch(packageName))
+        setSearch: (packageName) => dispatch(setSearch(packageName)),
+        getPackages: (packageName, start, end) => dispatch(fetchPackageDownload(packageName, start, end))
     }
 }
 

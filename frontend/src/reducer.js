@@ -3,6 +3,6 @@ import downloadChart from './download-chart/reducer'
 import inputs from './inputs/reducer'
 
 export default combineReducers({
-    downloadChart,
+    // downloadChart,
     inputs
 })

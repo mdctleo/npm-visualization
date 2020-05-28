@@ -1,10 +1,8 @@
 import React from "react";
 import * as d3 from 'd3'
-import { least, bisectDate } from 'd3-array'
 import { connect } from 'react-redux'
-import {fetchPackageDownload, getPackageDownload} from "./action"
 import { compose } from 'redux'
-import {selectDownloadChart, selectDownloadData} from "./selectors";
+import {selectMaxDownload, selectDownloadData, selectStartDate, selectEndDate} from "../inputs/selectors";
 
 class DownloadChart extends React.Component {
 
@@ -17,28 +15,30 @@ class DownloadChart extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getPackageDownload("express,react", "2016-01-01", "2016-03-01")
+        // this.props.getPackageDownload("express,react", "2016-01-01", "2016-03-01")
+        this.createDownloadChart()
     }
 
     componentDidUpdate(prevProps, prevState, snapShot) {
         this.createDownloadChart()
     }
     createDownloadChart() {
-        if (this.props.downloadChart.downloadData.length > 0) {
+        console.log(this.props)
+        if (this.props.downloadData.length > 0) {
             const node = this.node
 
             this.xScale = d3.scaleUtc()
-                .domain([this.props.downloadChart.start, this.props.downloadChart.end])
+                .domain([new Date(this.props.start), new Date(this.props.end)])
                 // .domain(d3.extent(this.props.downloadChart.downloadData, d => d.day))
                 .range([0, this.width])
 
             this.yScale = d3.scaleLinear()
-                .domain([0, this.props.downloadChart.maxDownload])
+                .domain([0, this.props.maxDownload])
                 .range([this.height, 0])
                 .nice()
 
             this.colourScale = d3.scaleOrdinal()
-                .domain(this.props.downloadChart.downloadData.map((d) => d.package))
+                .domain(this.props.downloadData.map((d) => d.package))
                 .range(d3.schemeTableau10)
 
 
@@ -69,7 +69,7 @@ class DownloadChart extends React.Component {
 
             let packageGroup = g
                 .selectAll(".package")
-                .data(this.props.downloadChart.downloadData)
+                .data(this.props.downloadData)
                 .enter()
                 .append("g")
                 .attr("class", "package")
@@ -149,20 +149,21 @@ class DownloadChart extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        downloadChart: selectDownloadChart(state),
-        downloadData: selectDownloadData(state)
+        downloadData: selectDownloadData(state),
+        start: selectStartDate(state),
+        end: selectEndDate(state),
+        maxDownload: selectMaxDownload(state)
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        getPackageDownload: (packageName, start, end) => dispatch(fetchPackageDownload(packageName, start, end))
-    }
-}
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         getPackageDownload: (packageName, start, end) => dispatch(fetchPackageDownload(packageName, start, end))
+//     }
+// }
 
 const withConnect = connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
 )
 
 export default compose(
