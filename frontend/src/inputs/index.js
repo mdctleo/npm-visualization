@@ -17,18 +17,17 @@ class Inputs extends React.Component {
     }
 
     render() {
-        console.log(this.props)
         return (
             <div>
                 <Search
                     placeholder="input search text"
-                    onSearch={value => console.log(value)}
+                    onSearch={(value, event) => {
+                        this.props.setSearch(value)
+                    }}
                     style={{ width: 200, marginRight: 20}}
                 />
                 <RangePicker
                     onCalendarChange={(dates, dateStrings) => this.props.setSearchDate(dateStrings[0], dateStrings[1])}
-                    // value={[this.props.start, this.props.end]}
-                    // value={[this.props.getStart(), this.props.getEnd()]}
                     value={[moment(this.props.start, 'YYYY-MM-DD'), moment(this.props.end, 'YYYY-MM-DD')]}
                 />
             </div>

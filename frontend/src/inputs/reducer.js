@@ -18,7 +18,7 @@ const inputs = (state = initialState, action) => {
         case SET_SEARCH:
             return {
                 ...state,
-                packageNames: state.packageNames + action.packageNames
+                packageNames: state.packageNames.length > 0? `${state.packageNames},${action.packageName}` : `${action.packageName}`
             }
         default:
             return state

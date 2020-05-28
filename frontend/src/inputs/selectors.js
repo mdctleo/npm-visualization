@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect'
 import { initialState } from './reducer'
 
-const selectInputs = state => state.input || initialState
+const selectInputs = state => state.inputs || initialState
 
 const selectStartDate = createSelector(
     selectInputs,
