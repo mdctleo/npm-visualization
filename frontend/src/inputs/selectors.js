@@ -15,7 +15,7 @@ const selectEndDate = createSelector(
 
 const selectPackageNames = createSelector(
     selectInputs,
-    inputs => inputs.packageNames
+    inputs => inputs.packageNames.length > 0? inputs.packageNames.split(",") : []
 )
 
 // const selectDownloadData = () => createSelector(
@@ -23,4 +23,4 @@ const selectPackageNames = createSelector(
 //     downloadChart => downloadChart.downloadData
 // )
 
-export {selectStartDate, selectEndDate}
+export {selectStartDate, selectEndDate, selectPackageNames}
