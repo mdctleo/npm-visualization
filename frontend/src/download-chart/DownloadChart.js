@@ -52,13 +52,11 @@ class DownloadChart extends React.Component {
     }
 
     drawDownloadChart() {
-        console.log(this.props.downloadData)
-
         this.xAxisG.call(d3.axisBottom(this.xScale).ticks(this.width / 80).tickSizeOuter(0))
         this.yAxisG.call(d3.axisLeft(this.yScale))
 
         this.yAxisLabel
-            .style({'display': "block"})
+            .text("Download Count")
 
         let packageGroup = this.g
             .selectAll(".package path")
@@ -122,7 +120,6 @@ class DownloadChart extends React.Component {
                 .attr("y", 6)
                 .attr("dy", "0.71em")
                 .attr("fill", "#000")
-                .text("Download Counts")
     }
 
     render() {
