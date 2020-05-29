@@ -15,7 +15,7 @@ export const initialState = {
     start: "2016-01-01",
     end: "2016-03-01",
     packageNames: "",
-    maxDownload: 0,
+    maxDownload: 100,
     downloadData: [],
 }
 
