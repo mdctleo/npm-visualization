@@ -18,7 +18,6 @@ class DownloadChart extends React.Component {
 
     componentDidMount() {
         this.createDownloadChart()
-        this.drawDownloadChart()
     }
 
     // componentWillUpdate(prevProps, prevState, snapShot) {
@@ -27,7 +26,6 @@ class DownloadChart extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapShot) {
         this.updateDownloadChart()
-        this.drawDownloadChart()
     }
 
     updateDownloadChart() {
@@ -54,37 +52,34 @@ class DownloadChart extends React.Component {
     }
 
     drawDownloadChart() {
+        console.log(this.props.downloadData)
+
         this.xAxisG.call(d3.axisBottom(this.xScale).ticks(this.width / 80).tickSizeOuter(0))
-        this.yAxisG
-            .call(d3.axisLeft(this.yScale))
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", "0.71em")
-            .attr("fill", "#000")
-            .text("Download Counts")
+        this.yAxisG.call(d3.axisLeft(this.yScale))
+
+        this.yAxisLabel
+            .style({'display': "block"})
 
         let packageGroup = this.g
-            .selectAll(".package")
-            .data(this.props.downloadData)
-        // .merge(packageGroup)
-        // .append("g")
-        // .attr("class", "package")
+            .selectAll(".package path")
+            .data(this.props.downloadData, d => d.package)
 
         let packageGroupEnter = packageGroup
             .enter()
             .append("g")
             .attr("class", "package")
+            .append("path")
+            .attr("class", "line")
+            .attr("fill", "none")
+            .attr("stroke-width", 1.5)
 
         packageGroupEnter
             .merge(packageGroup)
-            .append("path")
             .attr("id", d => d.package)
-            .attr("class", "line")
-            .attr("fill", "none")
             .attr("stroke", d => this.colourScale(d.package))
-            .attr("stroke-width", 1.5)
             .attr("d", d => this.line(d.downloads))
+
+        packageGroup.exit().remove()
 
     }
 
@@ -120,51 +115,14 @@ class DownloadChart extends React.Component {
             this.yAxisG = this.g.append("g")
                 .attr("class", "axis axis--y")
 
-            // g.append("g")
-            //     .attr("class", "axis axis--x")
-            //     .attr("transform", "translate(0," + this.height + ")")
-            //     .call(d3.axisBottom(this.xScale).ticks(this.width / 80).tickSizeOuter(0))
-            //
-            // // Create Y Axis
-            // // Add Text label to Y axis
-            // g.append("g")
-            //     .attr("class", "axis axis--y")
-            //     .call(d3.axisLeft(this.yScale))
-            //     .append("text")
-            //     .attr("transform", "rotate(-90)")
-            //     .attr("y", 6)
-            //     .attr("dy", "0.71em")
-            //     .attr("fill", "#000")
-            //     .text("Download Counts")
-
-            // let line = d3.line()
-            //     .x(d => this.xScale(d.day))
-            //     .y(d => this.yScale(d.downloads))
-            //
-            // let packageGroup = g
-            //     .selectAll(".package")
-            //     .data(this.props.downloadData)
-            //     // .merge(packageGroup)
-            //     // .append("g")
-            //     // .attr("class", "package")
-            //
-            // let packageGroupEnter = packageGroup
-            //     .enter()
-            //     .append("g")
-            //     .attr("class", "package")
-            //     .append("path")
-            //     .attr("class", "line")
-            //     .attr("fill", "none")
-            //
-            // packageGroupEnter
-            //     .merge(packageGroup)
-            //     // .append("path")
-            //     .attr("id", d => d.package)
-            //     // .attr("class", "line")
-            //     // .attr("fill", "none")
-            //     .attr("stroke", d => this.colourScale(d.package))
-            //     // .attr("stroke-width", 1.5)
-            //     .attr("d", d => line(d.downloads))
+            this.yAxisLabel = this.yAxisG
+                .append("text")
+                .attr("class", "axis axis--y text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", "0.71em")
+                .attr("fill", "#000")
+                .text("Download Counts")
     }
 
     render() {
