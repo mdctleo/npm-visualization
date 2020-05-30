@@ -66,30 +66,50 @@ export class API {
         }
     }
 
-
-    public async getPackage (packageName: string): Promise<any> {
+    public async getPackage (packageName: string, version: string): Promise<any> {
         try {
-            let url = `${this.API_BASE}/${packageName}`
-            let response = await request.get(url).accept('application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*')
-            console.log(response.body)
+            let url = `${this.API_BASE}/${packageName}/${version}`
+            let response = await request.get(url)
             return response
         } catch (err) {
-            console.log("get pacakge failed")
+            console.log("get package version failed")
             console.log(err)
         }
     }
 
-    // public async getPackage (packageName: string, version: string): Promise<any> {
-    //     try {
-    //         let url = `${this.API_BASE}/${packageName}/${version}`
-    //         let response = await request.get(url)
-    //         console.log(response.body)
-    //         return response
-    //     } catch (err) {
-    //         console.log("get package version failed")
-    //         console.log(err)
-    //     }
-    // }
+
+    public async getDependencies(packageName: string, version: string, result: Set<string>): Promise<any> {
+        try {
+
+            if (packageName === undefined || packageName === null) {
+                return
+            }
+
+            let packageResponse = await this.getPackage(packageName, version)
+
+            let dependencies:Array<Array<string>> = []
+            if (packageResponse.body.dependencies === undefined || packageResponse.body.dependencies === null) {
+                dependencies = []
+            } else {
+                dependencies = Object.entries(packageResponse.body.dependencies)
+            }
+
+            let pat = new RegExp(/[0-9]+.[0-9]+.[0-9]+/)
+
+            for (let [dependencyName, dependencyVersion] of dependencies) {
+                let dependencyVersionFormatted = pat.exec(dependencyVersion);
+                await this.getDependencies(dependencyName, dependencyVersionFormatted[0], result)
+                result.add(dependencyName)
+            }
+
+            return
+
+        } catch (err) {
+            console.log("getDependencies failed")
+            console.log(err)
+        }
+
+    }
 
     public async search(text: string, size=20, from=0,
                         quality=0, popularity=1, maintenance=0): Promise<any> {

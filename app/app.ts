@@ -13,6 +13,15 @@ const API_BASE = `https://registry.npmjs.org`
 
 let api = new API(API_BASE, DOWNLOAD_API)
 
+let result: Set<string> = new Set()
+api.getDependencies("react", "latest", result)
+    .then(() => {
+        console.log(result)
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+
 app.get('/getDownloads', (req, res) => {
     let period: string = `${req.query.start}:${req.query.end}`
     let packageNames: string = String(req.query.packageName)
