@@ -18,6 +18,11 @@ const selectPackageNames = createSelector(
     inputs => inputs.packageNames.length > 0? inputs.packageNames.split(",") : []
 )
 
+const selectColourScale = createSelector(
+    selectInputs,
+    inputs => inputs.colourScale
+)
+
 // const selectDownloadData = () => createSelector(
 //     selectDownloadChart,
 //     downloadChart => downloadChart.downloadData
@@ -36,4 +41,4 @@ const selectMaxDownload = createSelector(
 )
 
 
-export {selectStartDate, selectEndDate, selectPackageNames, selectDownloadData, selectMaxDownload}
+export {selectStartDate, selectEndDate, selectPackageNames, selectDownloadData, selectMaxDownload, selectColourScale}

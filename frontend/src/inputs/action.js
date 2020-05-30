@@ -2,6 +2,7 @@ import * as request from "superagent"
 
 export const GET_PCAKGE_DOWNLOAD = 'GET_PACKAGE_DOWNLOAD'
 export const RECEIVE_PACKAGE_DOWNLOAD = 'RECEIVE_PACKAGE_DOWNLOAD'
+export const SET_COLOUR_SCALE = 'SET_COLOUR_SCALE'
 
 export const SET_DATE = 'SET_DATE'
 export const SET_SEARCH = 'SET_SERACH'
@@ -37,6 +38,13 @@ export const receivePackageDownload = (responseBody) =>  {
         type: RECEIVE_PACKAGE_DOWNLOAD,
         maxDownload: responseBody.maxCount,
         data: responseBody.data
+    }
+}
+
+export const setColourScale = (colourScale) => {
+    return {
+        type: SET_COLOUR_SCALE,
+        colourScale: colourScale
     }
 }
 

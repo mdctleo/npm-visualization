@@ -1,4 +1,11 @@
-import {DELET_SEARCH, SET_DATE, SET_SEARCH, GET_PCAKGE_DOWNLOAD, RECEIVE_PACKAGE_DOWNLOAD} from "./action";
+import {
+    DELET_SEARCH,
+    SET_DATE,
+    SET_SEARCH,
+    GET_PCAKGE_DOWNLOAD,
+    RECEIVE_PACKAGE_DOWNLOAD,
+    SET_COLOUR_SCALE
+} from "./action";
 import moment from 'moment';
 
 // export const initialState = {
@@ -31,6 +38,11 @@ const inputs = (state = initialState, action) => {
             return {
                 ...state,
                 packageNames: state.packageNames.length > 0? `${state.packageNames},${action.packageName}` : `${action.packageName}`
+            }
+        case SET_COLOUR_SCALE:
+            return {
+                ...state,
+                colourScale: action.colourScale
             }
         case RECEIVE_PACKAGE_DOWNLOAD:
             return {

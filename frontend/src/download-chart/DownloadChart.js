@@ -2,6 +2,7 @@ import React from "react";
 import * as d3 from 'd3'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
+import { setColourScale } from "../inputs/action";
 import {selectMaxDownload, selectDownloadData, selectStartDate, selectEndDate} from "../inputs/selectors";
 
 class DownloadChart extends React.Component {
@@ -42,6 +43,8 @@ class DownloadChart extends React.Component {
         this.colourScale = d3.scaleOrdinal()
             .domain(this.props.downloadData.map((d) => d.package))
             .range(d3.schemeTableau10)
+
+        this.props.setColourScale(this.colourScale)
 
         this.line = d3.line()
             .x(d => this.xScale(d.day))
@@ -98,7 +101,9 @@ class DownloadChart extends React.Component {
                 .domain(this.props.downloadData.map((d) => d.package))
                 .range(d3.schemeTableau10)
 
-            this.line = d3.line()
+        this.props.setColourScale(this.colourScale)
+
+        this.line = d3.line()
                 .x(d => this.xScale(d.day))
                 .y(d => this.yScale(d.downloads))
 
@@ -131,6 +136,12 @@ class DownloadChart extends React.Component {
     }
 };
 
+const mapDispatchToProps = dispatch => {
+    return {
+        setColourScale: (colourScale) => dispatch(setColourScale(colourScale))
+    }
+}
+
 
 const mapStateToProps = state => {
     return {
@@ -142,7 +153,8 @@ const mapStateToProps = state => {
 }
 
 const withConnect = connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )
 
 export default compose(

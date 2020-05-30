@@ -1,14 +1,14 @@
 import React from 'react';
 import {Tag} from 'antd';
 import { connect } from 'react-redux'
-import { selectPackageNames } from '../inputs/selectors'
+import {selectColourScale, selectPackageNames} from '../inputs/selectors'
 
 
-const Tags = ({packageNames}) => {
+const Tags = ({packageNames, colourScale}) => {
     return (
         <div>
             {packageNames.map((packageName) => {
-                return <Tag key={packageName} color="magenta">{packageName}</Tag>
+                return <Tag key={packageName} color={colourScale(packageName)}>{packageName}</Tag>
             })}
         </div>
     )
@@ -16,7 +16,8 @@ const Tags = ({packageNames}) => {
 
 const mapStateToProps = state => {
     return {
-        packageNames: selectPackageNames(state)
+        packageNames: selectPackageNames(state),
+        colourScale: selectColourScale(state)
     }
 }
 
