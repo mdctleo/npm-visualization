@@ -32,7 +32,10 @@ class Inputs extends React.Component {
                     style={{ width: 200, marginRight: 20}}
                 />
                 <RangePicker
-                    onCalendarChange={(dates, dateStrings) => this.props.setSearchDate(dateStrings[0], dateStrings[1])}
+                    onCalendarChange={(dates, dateStrings) => {
+                        this.props.setSearchDate(dateStrings[0], dateStrings[1])
+                        this.props.getPackages(this.props.packageNames, dateStrings[0], dateStrings[1])
+                    }}
                     value={[moment(this.props.start, 'YYYY-MM-DD'), moment(this.props.end, 'YYYY-MM-DD')]}
                 />
             </div>
