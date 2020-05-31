@@ -1,10 +1,10 @@
 import { DatePicker } from 'antd';
-import React from "react";
+import React from 'react';
 import { Input } from 'antd';
 import { connect } from 'react-redux'
-import {compose} from "redux";
-import {setSearch, setSearchDate, fetchPackageDownload} from "./action";
-import {selectEndDate, selectPackageNames, selectStartDate} from "./selectors";
+import {compose} from 'redux';
+import {setSearch, setSearchDate, fetchPackageDownload} from './action';
+import {selectEndDate, selectPackageNames, selectStartDate} from './selectors';
 import moment from 'moment';
 
 const { RangePicker } = DatePicker;

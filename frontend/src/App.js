@@ -4,6 +4,7 @@ import 'antd/dist/antd.css'
 import DownloadChart from "./download-chart/DownloadChart"
 import Inputs from "./inputs/index"
 import Tags from "./tags";
+import DependencyControls from "./dependency-controls";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
             <Inputs/>
             <Tags/>
             <DownloadChart width={960} height={500} margin={{top: 20, right: 80, bottom: 30, left: 50}}/>
+            <DependencyControls/>
         </div>
     </div>
   );

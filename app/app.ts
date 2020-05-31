@@ -14,17 +14,7 @@ const API_BASE = `https://registry.npmjs.org`
 
 let api = new API(API_BASE, DOWNLOAD_API)
 
-let result: Set<string> = new Set()
-let rootNode = new DependencyNode("react", "latest")
-api.getDependencies("react", "latest", rootNode,  result)
-    .then(() => {
-        console.log(rootNode.children[0])
-    })
-    .catch((err) => {
-        console.log(err)
-    })
-
-app.get('/getDownloads', (req, res) => {
+app.get('/getDownloads', (req: any, res: any) => {
     let period: string = `${req.query.start}:${req.query.end}`
     let packageNames: string = String(req.query.packageName)
     api.getDownloads(period, packageNames)
@@ -38,6 +28,25 @@ app.get('/getDownloads', (req, res) => {
             res.status(500).send(err)
 
         })
+})
+
+app.get('/getDependencies', (req: any, res: any) => {
+    console.log("got here")
+    let packageName: string = String(req.query.packageName)
+    let version: string = String(req.query.version)
+
+    let result: Set<string> = new Set()
+    let rootNode = new DependencyNode(packageName, version)
+    api.getDependencies(packageName, version, rootNode,  result)
+        .then(() => {
+            res.status(200).send(rootNode)
+        })
+        .catch((err) => {
+            console.log("/getDependencies error")
+            console.log(err)
+            res.status(500).send(err)
+        })
+
 })
 
 app.get('/')

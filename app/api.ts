@@ -88,9 +88,7 @@ export class API {
             let packageResponse = await this.getPackage(packageName, version)
 
             let dependencies:Array<Array<string>> = []
-            if (packageResponse.body.dependencies === undefined || packageResponse.body.dependencies === null) {
-                dependencies = []
-            } else {
+            if (packageResponse.body.dependencies !== undefined && packageResponse.body.dependencies !== null) {
                 dependencies = Object.entries(packageResponse.body.dependencies)
             }
 
