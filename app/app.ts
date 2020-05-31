@@ -1,6 +1,7 @@
 import {API} from "./api";
 import express from "express";
 import cors from "cors"
+import {DependencyNode} from "./Node";
 
 const app = express();
 const port = 8000
@@ -14,9 +15,10 @@ const API_BASE = `https://registry.npmjs.org`
 let api = new API(API_BASE, DOWNLOAD_API)
 
 let result: Set<string> = new Set()
-api.getDependencies("react", "latest", result)
+let rootNode = new DependencyNode("react", "latest")
+api.getDependencies("react", "latest", rootNode,  result)
     .then(() => {
-        console.log(result)
+        console.log(rootNode.children[0])
     })
     .catch((err) => {
         console.log(err)

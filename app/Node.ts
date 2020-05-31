@@ -1,7 +1,7 @@
-export class Node {
+export class DependencyNode {
     packageName: string
     version: string
-    children: Array<Node> = null
+    children: Array<DependencyNode> = []
 
     constructor(packageName: string, version: string) {
         this.packageName = packageName
@@ -9,7 +9,7 @@ export class Node {
     }
 
 
-    public addChild(child: Node): void {
+    public addChild(child: DependencyNode): void {
         this.children.push(child)
     }
 

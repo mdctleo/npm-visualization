@@ -1,6 +1,6 @@
 import * as request from "superagent"
-import * as fs from "fs"
-import {isNumber} from "util";
+import {DependencyNode} from "./Node";
+
 export class API {
     API_BASE: string
     DOWNLOAD_API: string
@@ -78,7 +78,7 @@ export class API {
     }
 
 
-    public async getDependencies(packageName: string, version: string, result: Set<string>): Promise<any> {
+    public async getDependencies(packageName: string, version: string, node: DependencyNode, result: Set<string>): Promise<any> {
         try {
 
             if (packageName === undefined || packageName === null) {
@@ -96,10 +96,19 @@ export class API {
 
             let pat = new RegExp(/[0-9]+.[0-9]+.[0-9]+/)
 
-            for (let [dependencyName, dependencyVersion] of dependencies) {
+            for (let i = 0; i < dependencies.length; i++) {
+                let dependencyName = dependencies[i][0]
+                let dependencyVersion = dependencies[i][1]
                 let dependencyVersionFormatted = pat.exec(dependencyVersion);
-                await this.getDependencies(dependencyName, dependencyVersionFormatted[0], result)
-                result.add(dependencyName)
+                if (!result.has(dependencyName)) {
+                    node.addChild(new DependencyNode(dependencyName, dependencyVersionFormatted[0]))
+                    result.add(dependencyName)
+                    await this.getDependencies(dependencyName, dependencyVersionFormatted[0], node.children[i], result)
+                } else {
+                    await this.getDependencies(dependencyName, dependencyVersionFormatted[0], node, result)
+                }
+                // console.log(dependencyName)
+                // result.add(dependencyName)
             }
 
             return
