@@ -14,7 +14,7 @@ export const initialState = {
 
 
 
-const dependencyControls = (state = initialState, action) => {
+const dependency = (state = initialState, action) => {
     switch (action.type) {
         case GET_DEPENDENCIES:
             return {
@@ -32,4 +32,4 @@ const dependencyControls = (state = initialState, action) => {
     }
 }
 
-export default dependencyControls
+export default dependency

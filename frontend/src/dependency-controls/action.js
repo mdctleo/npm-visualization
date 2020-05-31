@@ -27,7 +27,7 @@ export const fetchDependencies = (packageName, version) => {
             .query(`packageName=${packageName}`)
             .query(`version=${version}`)
             .then(response => {
-                dispatch(receiveDependencies(packageName, version, response.body))
+                dispatch(receiveDependencies(response.body))
             })
             .catch(err => {
                 console.log(err)

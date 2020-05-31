@@ -3,6 +3,7 @@ import { Input } from 'antd';
 import { connect } from 'react-redux'
 import {compose} from 'redux';
 import {fetchDependencies} from "./action";
+import {selectDependencyData} from "./selector";
 
 const { Search } = Input;
 
@@ -34,6 +35,7 @@ class DependencyControls extends React.Component {
 
 const mapStateToProps = state => {
     return {
+        data: selectDependencyData(state)
     }
 }
 

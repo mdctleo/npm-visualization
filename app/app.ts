@@ -14,6 +14,10 @@ const API_BASE = `https://registry.npmjs.org`
 
 let api = new API(API_BASE, DOWNLOAD_API)
 
+api.search("react")
+    .then((result) => console.log(result.body))
+    .catch((err) => console.log(err))
+
 app.get('/getDownloads', (req: any, res: any) => {
     let period: string = `${req.query.start}:${req.query.end}`
     let packageNames: string = String(req.query.packageName)
@@ -31,7 +35,6 @@ app.get('/getDownloads', (req: any, res: any) => {
 })
 
 app.get('/getDependencies', (req: any, res: any) => {
-    console.log("got here")
     let packageName: string = String(req.query.packageName)
     let version: string = String(req.query.version)
 
