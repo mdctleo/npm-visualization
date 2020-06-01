@@ -11,13 +11,17 @@ class DependencyChart extends React.Component {
         this.createChart = this.createChart.bind(this)
         this.updateChart = this.updateChart.bind(this)
         this.drawChart = this.drawChart.bind(this)
+        this.drag = this.drag.bind(this)
+        this.dragstarted = this.dragstarted.bind(this)
+        this.dragged = this.dragged.bind(this)
+        this.dragended = this.dragended.bind(this)
         this.width = this.props.width - this.props.margin.left - this.props.margin.right
         this.height = this.props.height - this.props.margin.top - this.props.margin.bottom
 
     }
 
     componentDidMount() {
-        this.createChart()
+        // this.createChart()
     }
 
     componentDidUpdate(prevProps, prevState, snapShot) {
@@ -38,7 +42,9 @@ class DependencyChart extends React.Component {
         const links = root.links()
         const nodes = root.descendants()
 
-        const simulation = d3.forceSimulation(nodes)
+        console.log(nodes)
+
+        this.simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id).distance(300).strength(0))
             .force("charge", d3.forceManyBody().strength(-300))
             .force("x", d3.forceX())
@@ -90,8 +96,10 @@ class DependencyChart extends React.Component {
             .append("circle")
             .attr("class", "node")
             .attr("fill", "#ffffff")
-            .attr("stroke", "#000000")
+            .attr("stroke", d => d3.interpolateRdYlGn(d.data.final))
             .attr("r", 35)
+            .call(this.drag())
+
 
 
        const nodeEnterText =  nodeEnter
@@ -106,7 +114,7 @@ class DependencyChart extends React.Component {
         //     .text(d => d.data.packageName);
 
 
-        simulation.on("tick", () => {
+        this.simulation.on("tick", () => {
             linkEnter
                 .attr("x1", d => d.source.x)
                 .attr("y1", d => d.source.y)
@@ -122,6 +130,30 @@ class DependencyChart extends React.Component {
                 .attr("y", d => d.y)
         })
 
+    }
+
+    drag() {
+        return d3.drag()
+            .on("start", this.dragstarted)
+            .on("drag", this.dragged)
+            .on("end", this.dragended)
+    }
+
+    dragstarted(d) {
+        if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+    }
+
+    dragged(d) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+    }
+
+    dragended(d) {
+        if (!d3.event.active) this.simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
     }
 
     render() {
