@@ -21,97 +21,98 @@ class DependencyChart extends React.Component {
     }
 
     componentDidMount() {
-        // this.createChart()
+        this.createChart()
     }
 
     componentDidUpdate(prevProps, prevState, snapShot) {
         this.updateChart()
-        this.createChart()
     }
 
     updateChart() {
+        this.root = d3.hierarchy(this.props.data)
+        this.links = this.root.links()
+        this.nodes = this.root.descendants()
 
-    }
-
-    drawChart() {
-
-    }
-
-    createChart() {
-        const root = d3.hierarchy(this.props.data)
-        const links = root.links()
-        const nodes = root.descendants()
-
-        console.log(nodes)
-
-        this.simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.id).distance(300).strength(0))
+        this.simulation = d3.forceSimulation(this.nodes)
+            .force("link", d3.forceLink(this.links).id(d => d.id).distance(300).strength(0))
             .force("charge", d3.forceManyBody().strength(-300))
             .force("x", d3.forceX())
             .force("y", d3.forceY())
 
-        const g = d3.select(this.node)
-            .attr("viewBox", [-this.width / 2, -this.height / 2, this.width, this.height]);
+        this.drawChart()
+    }
 
+    drawChart() {
+        let link = this.g.selectAll(".link")
+            .data(this.links)
 
-        // const link = g.append("g")
-        //     .attr("stroke", "#999")
-        //     .attr("stroke-opacity", 0.8)
-        //     .selectAll("line")
-        //     .data(links)
-        //     .join("line");
+        link.exit().remove()
 
-        // const node = g.append("g")
-        //     .attr("fill", "#fff")
-        //     .attr("stroke", "#000")
-        //     .attr("stroke-width", 1.5)
-        //     .selectAll("circle")
-        //     .data(nodes)
-        //     .join("circle")
-        //     // .attr("fill", d => d.children ? null : "#000")
-        //     // .attr("stroke", d => d.children ? #fff : "#fff")
-        //     .attr("r", 3)
-            // .call(drag(simulation));
-        const link = g.selectAll(".link")
-            .data(links)
-
-        const linkEnter = link.enter()
+        let linkEnter = link.enter()
             .append("line")
+            .attr("class", "link")
             .attr("stroke", "#999")
             .attr("stroke-opacity", 0.8)
 
-        const node = g.selectAll(".node")
-            .data(nodes)
+        link = link.merge(linkEnter)
 
-        const nodeEnter = node
-            .enter()
+        let nodeGroup = this.g.selectAll(".node-group")
+            .data(this.nodes, d => d.data.packageName)
+
+        nodeGroup.exit().remove()
+
+        let nodeGroupEnter = nodeGroup.enter()
             .append("g")
-            // .append("circle")
-            // .attr("class", "node")
-            // .attr("fill", "#ffffff")
-            // .attr("stroke", "#000000")
-            // .attr("r", 10)
+            .attr("class", "node-group")
 
-        const nodeEnterCircle = nodeEnter
-            .append("circle")
-            .attr("class", "node")
+        let nodeEnterCircle = nodeGroupEnter.append("circle")
+            .attr("class", "node-circle")
             .attr("fill", "#ffffff")
-            .attr("stroke", d => d3.interpolateRdYlGn(d.data.final))
+            .attr("stroke-width", 3)
             .attr("r", 35)
             .call(this.drag())
 
 
-
-       const nodeEnterText =  nodeEnter
-            .append("text")
+        let nodeEnterText =  nodeGroupEnter.append("text")
+            .attr("class", "node-text")
             .attr("fill", "#000000")
             .attr("font-size", 12)
             .attr("font-family", "montserrat")
             .attr("text-anchor", "middle")
+
+        nodeGroup = nodeGroup.merge(nodeGroupEnter)
+
+        nodeGroup.select(".node-circle")
+            .attr("stroke", d => d3.interpolateRdYlGn(d.data.final))
+
+        nodeGroup.select(".node-text")
             .text(d => d.data.packageName)
 
-        // node.append("title")
-        //     .text(d => d.data.packageName);
+
+        // const node = this.g.selectAll(".node")
+        //     .data(this.nodes)
+        //
+        // const nodeEnter = node
+        //     .enter()
+        //     .append("g")
+        //     .attr("class", "node-group")
+        //
+        // const nodeEnterCircle = nodeEnter
+        //     .append("circle")
+        //     .attr("fill", "#ffffff")
+        //     .attr("stroke-width", 3)
+        //     .attr("r", 35)
+        //     .attr("stroke", d => d3.interpolateRdYlGn(d.data.final))
+        //     .call(this.drag())
+        //
+        // const nodeEnterText = nodeEnter
+        //     .append("text")
+        //     .attr("fill", "#000000")
+        //     .attr("font-size", 12)
+        //     .attr("font-family", "montserrat")
+        //     .attr("text-anchor", "middle")
+        //     .text(d => d.data.packageName)
+
 
 
         this.simulation.on("tick", () => {
@@ -129,6 +130,26 @@ class DependencyChart extends React.Component {
                 .attr("x", d => d.x)
                 .attr("y", d => d.y)
         })
+
+        // node.exit().remove()
+        // nodeEnter.exit().remove()
+        // nodeEnterCircle.exit().remove()
+        // nodeEnterText.exit().remove()
+    }
+
+    createChart() {
+        this.root = d3.hierarchy(this.props.data)
+        this.links = this.root.links()
+        this.nodes = this.root.descendants()
+
+        this.simulation = d3.forceSimulation(this.nodes)
+            .force("link", d3.forceLink(this.links).id(d => d.id).distance(300).strength(0))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("x", d3.forceX())
+            .force("y", d3.forceY())
+
+        this.g = d3.select(this.node)
+            .attr("viewBox", [-this.width / 2, -this.height / 2, this.width, this.height]);
 
     }
 

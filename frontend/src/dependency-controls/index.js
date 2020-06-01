@@ -14,7 +14,7 @@ class DependencyControls extends React.Component {
     }
 
     componentDidMount() {
-        this.props.getDependencies("react", "latest")
+        // this.props.getDependencies("express", "latest")
     }
 
     render() {
@@ -23,8 +23,7 @@ class DependencyControls extends React.Component {
                 <Search
                     placeholder="input search text"
                     onSearch={(value, event) => {
-                        this.props.setSearch(value)
-                        this.props.getPackages(value, this.props.start, this.props.end)
+                        this.props.getDependencies(value, "latest")
                     }}
                     style={{ width: 200, marginRight: 20}}
                 />
