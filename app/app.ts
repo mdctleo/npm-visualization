@@ -14,19 +14,6 @@ const API_BASE = `https://registry.npmjs.org`
 
 let api = new API(API_BASE, DOWNLOAD_API)
 
-// api.search("react")
-//     .then((result) => console.log(result.body))
-//     .catch((err) => console.log(err))
-
-
-let result: Set<string> = new Set()
-api.getDependencies("react", "latest", result)
-    .then((rootNode) => {
-        console.log(rootNode)
-    })
-    .catch((err) => {
-
-    })
 
 app.get('/getDownloads', (req: any, res: any) => {
     let period: string = `${req.query.start}:${req.query.end}`
@@ -49,16 +36,6 @@ app.get('/getDependencies', (req: any, res: any) => {
     let version: string = String(req.query.version)
 
     let result: Set<string> = new Set()
-    let rootNode = new DependencyNode(packageName, version)
-    // api.getDependencies(packageName, version, rootNode,  result)
-    //     .then(() => {
-    //         res.status(200).send(rootNode)
-    //     })
-    //     .catch((err) => {
-    //         console.log("/getDependencies error")
-    //         console.log(err)
-    //         res.status(500).send(err)
-    //     })
 
     api.getDependencies(packageName, version, result)
         .then((rootNode) => {
@@ -73,9 +50,3 @@ app.get('/getDependencies', (req: any, res: any) => {
 app.get('/')
 
 app.listen(port, () => console.log(`backend listening at http://localhost:${port}`))
-
-
-// api.getDownloads("2020-04-01:2020-04-20", ["express", "jquery"])
-// api.getRegistryMeta()
-// api.getPackage("express", "4.17.0")
-// api.search("express")

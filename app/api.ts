@@ -79,24 +79,30 @@ export class API {
 
     public async getDependencies(packageName: string, version: string, result: Set<string>): Promise<any> {
         try {
-            let packageResponse = await this.getPackage(packageName, version)
+            let packageResponse = await Promise.all([this.getPackage(packageName, version), this.search(packageName)])
 
-            if (packageResponse.body.dependencies === undefined) {
-                return new DependencyNode(packageName, version)
+            let score: any = packageResponse[1].body.objects[0].score
+
+            // base case, we traversed to the end of the dependency tree, return a new node
+            if (packageResponse[0].body.dependencies === undefined) {
+                return new DependencyNode(packageName, version, score)
             }
 
-            let dependencies:Array<Array<string>> = Object.entries(packageResponse.body.dependencies)
-
+            let dependencies:Array<Array<string>> = Object.entries(packageResponse[0].body.dependencies)
 
             let pat = new RegExp(/[0-9]+.[0-9]+.[0-9]+/)
 
-            let parentNode = new DependencyNode(packageName, version)
+            // otherwise, we build the current node as a parent node
+            let parentNode = new DependencyNode(packageName, version, score)
 
+            // recursively, build all its dependency as child nodes
             for (let i = 0; i < dependencies.length; i++) {
                 let dependencyName = dependencies[i][0]
                 let dependencyVersion = dependencies[i][1]
                 let dependencyVersionFormatted = pat.exec(dependencyVersion);
 
+                // does not include dependencies that has already appeared once in other packages? not sure if
+                // it is the best approach
                 if (!result.has(dependencyName)) {
                     let child = await this.getDependencies(dependencyName, dependencyVersionFormatted[0], result)
                     parentNode.addChild(child)
@@ -104,8 +110,8 @@ export class API {
                 }
             }
 
+            // return the parent Node up the stack or at the very end, parentNode will be our root
             return parentNode
-
 
         } catch (err) {
             console.log("getDependencies failed")
