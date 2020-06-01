@@ -77,48 +77,43 @@ export class API {
         }
     }
 
-
-    public async getDependencies(packageName: string, version: string, node: DependencyNode, result: Set<string>): Promise<any> {
+    public async getDependencies(packageName: string, version: string, result: Set<string>): Promise<any> {
         try {
-
-            if (packageName === undefined || packageName === null) {
-                return
-            }
-
             let packageResponse = await this.getPackage(packageName, version)
 
-            console.log(packageResponse.body)
-
-            let dependencies:Array<Array<string>> = []
-            if (packageResponse.body.dependencies !== undefined && packageResponse.body.dependencies !== null) {
-                dependencies = Object.entries(packageResponse.body.dependencies)
+            if (packageResponse.body.dependencies === undefined) {
+                return new DependencyNode(packageName, version)
             }
 
+            let dependencies:Array<Array<string>> = Object.entries(packageResponse.body.dependencies)
+
+
             let pat = new RegExp(/[0-9]+.[0-9]+.[0-9]+/)
+
+            let parentNode = new DependencyNode(packageName, version)
 
             for (let i = 0; i < dependencies.length; i++) {
                 let dependencyName = dependencies[i][0]
                 let dependencyVersion = dependencies[i][1]
                 let dependencyVersionFormatted = pat.exec(dependencyVersion);
+
                 if (!result.has(dependencyName)) {
-                    node.addChild(new DependencyNode(dependencyName, dependencyVersionFormatted[0]))
+                    let child = await this.getDependencies(dependencyName, dependencyVersionFormatted[0], result)
+                    parentNode.addChild(child)
                     result.add(dependencyName)
-                    await this.getDependencies(dependencyName, dependencyVersionFormatted[0], node.children[i], result)
-                } else {
-                    await this.getDependencies(dependencyName, dependencyVersionFormatted[0], node, result)
                 }
             }
 
-            return
+            return parentNode
+
 
         } catch (err) {
             console.log("getDependencies failed")
             console.log(err)
         }
-
     }
 
-    public async search(text: string, size=20, from=0,
+    public async search(text: string, size=1, from=0,
                         quality=0, popularity=1, maintenance=0): Promise<any> {
         try {
             let url = `${this.API_BASE}/-/v1/search`
@@ -131,7 +126,8 @@ export class API {
                 .query({popularity: popularity})
                 .query({maintenance: maintenance})
 
-            console.log(response.body)
+            return response
+
         } catch (err) {
             console.log("search failed")
             console.log(err)
