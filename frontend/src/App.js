@@ -15,8 +15,9 @@ function App() {
             <Inputs/>
             <Tags/>
             <DownloadChart width={960} height={500} margin={{top: 20, right: 80, bottom: 30, left: 50}}/>
+            <span>Dependency graph</span>
             <DependencyControls/>
-            <DependencyChart width={960} height={500} margin={{top: 20, right: 80, bottom: 30, left: 50}}/>
+            <DependencyChart width={960} height={600} margin={{top: 20, right: 80, bottom: 30, left: 50}}/>
         </div>
     </div>
   );

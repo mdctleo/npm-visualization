@@ -1,6 +1,7 @@
 export class DependencyNode {
     packageName: string
     version: string
+    size?: number
     final: number
     quality: number
     popularity: number
@@ -21,6 +22,10 @@ export class DependencyNode {
 
     public addChild(child: DependencyNode): void {
         this.children.push(child)
+    }
+
+    public setTreeSize(size: number): void {
+        this.size = size
     }
 
 }

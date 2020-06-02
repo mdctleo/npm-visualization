@@ -11,10 +11,6 @@ class DependencyChart extends React.Component {
         this.createChart = this.createChart.bind(this)
         this.updateChart = this.updateChart.bind(this)
         this.drawChart = this.drawChart.bind(this)
-        this.drag = this.drag.bind(this)
-        this.dragstarted = this.dragstarted.bind(this)
-        this.dragged = this.dragged.bind(this)
-        this.dragended = this.dragended.bind(this)
         this.width = this.props.width - this.props.margin.left - this.props.margin.right
         this.height = this.props.height - this.props.margin.top - this.props.margin.bottom
 
@@ -29,153 +25,116 @@ class DependencyChart extends React.Component {
     }
 
     updateChart() {
-        this.root = d3.hierarchy(this.props.data)
-        this.links = this.root.links()
-        this.nodes = this.root.descendants()
+        this.root = this.tree(this.props.data);
 
-        this.simulation = d3.forceSimulation(this.nodes)
-            .force("link", d3.forceLink(this.links).id(d => d.id).distance(300).strength(0))
-            .force("charge", d3.forceManyBody().strength(-300))
-            .force("x", d3.forceX())
-            .force("y", d3.forceY())
+        let x0 = Infinity;
+        let x1 = -x0;
+        this.root.each(d => {
+            if (d.x > x1) x1 = d.x;
+            if (d.x < x0) x0 = d.x;
+        });
+
+        this.svg.attr("viewBox", [0, 0, this.width, x1 - x0 + this.root.dx * 2])
+        this.g.attr("transform", `translate(${this.root.dy / 3},${this.root.dx - x0})`);
+
+        //
+        // this.cluster = d3.cluster()
+        //     .size([this.height, this.width - 100])
+        //
+        // this.root = d3.hierarchy(this.props.data, d => d.children)
+        // this.cluster(this.root)
 
         this.drawChart()
     }
 
     drawChart() {
-        let link = this.g.selectAll(".link")
-            .data(this.links)
+
+        // Add the links between nodes:
+
+        let link = this.g.selectAll('path')
+            .data(this.root.links())
 
         link.exit().remove()
 
-        let linkEnter = link.enter()
-            .append("line")
-            .attr("class", "link")
-            .attr("stroke", "#999")
-            .attr("stroke-opacity", 0.8)
+        let linkEnter = link
+            .enter()
+            .append('path')
 
         link = link.merge(linkEnter)
+        link
+            // .attr("d", d => {
+            //     return "M" + d.y + "," + d.x
+            //         + "C" + (d.parent.y + 30) + "," + d.x
+            //         + " " + (d.parent.y + 130) + "," + d.parent.x // 50 and 150 are coordinates of inflexion, play with it to change links shape
+            //         + " " + d.parent.y + "," + d.parent.x;
+            // })
+            .attr("d", d3.linkHorizontal()
+                .x(d => d.y)
+                .y(d => d.x))
+            .style("fill", 'none')
+            .attr("stroke", '#ccc')
 
-        let nodeGroup = this.g.selectAll(".node-group")
-            .data(this.nodes, d => d.data.packageName)
 
-        nodeGroup.exit().remove()
+        let node = this.g.selectAll('g')
+            .data(this.root.descendants())
 
-        let nodeGroupEnter = nodeGroup.enter()
+        node.exit().remove()
+
+        let nodeEnter = node
+            .enter()
             .append("g")
-            .attr("class", "node-group")
 
-        let nodeEnterCircle = nodeGroupEnter.append("circle")
-            .attr("class", "node-circle")
-            .attr("fill", "#ffffff")
-            .attr("stroke-width", 3)
-            .attr("r", 35)
-            .call(this.drag())
+        nodeEnter.append("circle")
+
+        nodeEnter.append("text")
 
 
-        let nodeEnterText =  nodeGroupEnter.append("text")
-            .attr("class", "node-text")
-            .attr("fill", "#000000")
-            .attr("font-size", 12)
-            .attr("font-family", "montserrat")
-            .attr("text-anchor", "middle")
+        node = node.merge(nodeEnter)
+            .attr("transform", d => `translate(${d.y},${d.x})`)
 
-        nodeGroup = nodeGroup.merge(nodeGroupEnter)
+        node.select('circle')
+            .attr("r", 6)
+            .style("fill", d => d3.interpolateRdYlGn(d.data.final))
+            .attr("stroke", "black")
+            .style("stroke-width", 1)
 
-        nodeGroup.select(".node-circle")
-            .attr("stroke", d => d3.interpolateRdYlGn(d.data.final))
-
-        nodeGroup.select(".node-text")
+        node.select('text')
+            .attr("dy", "0.31em")
+            .attr("x", d => d.children ? -9 : 9)
+            .attr("text-anchor", d => d.children ? "end" : "start")
             .text(d => d.data.packageName)
+            .clone(true).lower()
+            .attr("stroke", "white")
 
-
-        // const node = this.g.selectAll(".node")
-        //     .data(this.nodes)
-        //
-        // const nodeEnter = node
-        //     .enter()
-        //     .append("g")
-        //     .attr("class", "node-group")
-        //
-        // const nodeEnterCircle = nodeEnter
-        //     .append("circle")
-        //     .attr("fill", "#ffffff")
-        //     .attr("stroke-width", 3)
-        //     .attr("r", 35)
-        //     .attr("stroke", d => d3.interpolateRdYlGn(d.data.final))
-        //     .call(this.drag())
-        //
-        // const nodeEnterText = nodeEnter
-        //     .append("text")
-        //     .attr("fill", "#000000")
-        //     .attr("font-size", 12)
-        //     .attr("font-family", "montserrat")
-        //     .attr("text-anchor", "middle")
-        //     .text(d => d.data.packageName)
-
-
-
-        this.simulation.on("tick", () => {
-            linkEnter
-                .attr("x1", d => d.source.x)
-                .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x)
-                .attr("y2", d => d.target.y)
-
-            nodeEnterCircle
-                .attr("cx", d => d.x)
-                .attr("cy", d => d.y)
-
-            nodeEnterText
-                .attr("x", d => d.x)
-                .attr("y", d => d.y)
-        })
-
-        // node.exit().remove()
-        // nodeEnter.exit().remove()
-        // nodeEnterCircle.exit().remove()
-        // nodeEnterText.exit().remove()
     }
 
     createChart() {
-        this.root = d3.hierarchy(this.props.data)
-        this.links = this.root.links()
-        this.nodes = this.root.descendants()
+        this.root = this.tree(this.props.data);
 
-        this.simulation = d3.forceSimulation(this.nodes)
-            .force("link", d3.forceLink(this.links).id(d => d.id).distance(300).strength(0))
-            .force("charge", d3.forceManyBody().strength(-300))
-            .force("x", d3.forceX())
-            .force("y", d3.forceY())
+        let x0 = Infinity;
+        let x1 = -x0;
+        this.root.each(d => {
+            if (d.x > x1) x1 = d.x;
+            if (d.x < x0) x0 = d.x;
+        });
 
-        this.g = d3.select(this.node)
-            .attr("viewBox", [-this.width / 2, -this.height / 2, this.width, this.height]);
+        this.svg = d3.select(this.node).append("g")
+            .attr("viewBox", [0, 0, this.width, x1 - x0 + this.root.dx * 2])
+
+        this.g = this.svg.append('g')
+            .attr("font-family", "sans-serif")
+            .attr("font-size", 12)
+            .attr("transform", `translate(${this.root.dy / 3},${this.root.dx - x0})`);
 
     }
 
-    drag() {
-        return d3.drag()
-            .on("start", this.dragstarted)
-            .on("drag", this.dragged)
-            .on("end", this.dragended)
+    tree(data) {
+        const root = d3.hierarchy(data)
+        root.dx = 15
+        root.dy = this.width / (root.height + 1)
+        return d3.tree().nodeSize([root.dx, root.dy])(root)
     }
 
-    dragstarted(d) {
-        if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-    }
-
-    dragged(d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-    }
-
-    dragended(d) {
-        if (!d3.event.active) this.simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
-    }
 
     render() {
         return (

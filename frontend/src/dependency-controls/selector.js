@@ -8,4 +8,9 @@ const selectDependencyData = createSelector(
     dependency => dependency.data
 )
 
-export {selectDependency, selectDependencyData}
+const selectisFetching = createSelector(
+    selectDependency,
+    dependency => dependency.isFetching
+)
+
+export {selectDependency, selectDependencyData, selectisFetching}

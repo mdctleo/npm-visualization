@@ -38,7 +38,8 @@ app.get('/getDependencies', (req: any, res: any) => {
     let result: Set<string> = new Set()
 
     api.getDependencies(packageName, version, result)
-        .then((rootNode) => {
+        .then((rootNode: DependencyNode) => {
+            rootNode.setTreeSize(result.size)
             res.status(200).send(rootNode)
         })
         .catch((err) => {

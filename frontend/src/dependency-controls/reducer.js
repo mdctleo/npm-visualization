@@ -9,7 +9,8 @@ import {GET_DEPENDENCIES, RECEIVE_DEPENDENCIES} from "./action";
 export const initialState = {
     packageName: "react",
     version: "latest",
-    data: {}
+    data: {},
+    isFetching: false
 }
 
 
@@ -20,12 +21,14 @@ const dependency = (state = initialState, action) => {
             return {
                 ...state,
                 packageName: action.packageName,
-                version: action.version
+                version: action.version,
+                isFetching: true
             }
         case RECEIVE_DEPENDENCIES:
             return {
                 ...state,
-                data: action.data
+                data: action.data,
+                isFetching: false
             }
         default:
             return state

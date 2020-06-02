@@ -23,13 +23,6 @@ const selectColourScale = createSelector(
     inputs => inputs.colourScale
 )
 
-// const selectDownloadData = () => createSelector(
-//     selectDownloadChart,
-//     downloadChart => downloadChart.downloadData
-// )
-
-// const selectDownloadChart = state => state.downloadChart || initialState
-
 const selectDownloadData = createSelector(
     selectInputs,
     inputs => inputs.downloadData
@@ -40,5 +33,17 @@ const selectMaxDownload = createSelector(
     inputs => inputs.maxDownload
 )
 
+const selectisFetching = createSelector(
+    selectInputs,
+    inputs => inputs.isFetching
+)
 
-export {selectStartDate, selectEndDate, selectPackageNames, selectDownloadData, selectMaxDownload, selectColourScale}
+
+export {
+    selectStartDate,
+    selectEndDate,
+    selectPackageNames,
+    selectDownloadData,
+    selectMaxDownload,
+    selectColourScale,
+    selectisFetching}
