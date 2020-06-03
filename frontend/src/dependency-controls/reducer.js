@@ -1,16 +1,11 @@
-import {GET_DEPENDENCIES, RECEIVE_DEPENDENCIES} from "./action";
-
-// export const initialState = {
-//     packkgeName: "",
-//     version: "",
-//     data: {}
-// }
+import {GET_DEPENDENCIES, RECEIVE_DEPENDENCIES, SET_ERROR, SET_LOADING} from "./action";
 
 export const initialState = {
     packageName: "react",
     version: "latest",
     data: {},
-    isFetching: false
+    isLoading: false,
+    isError: false
 }
 
 
@@ -22,13 +17,21 @@ const dependency = (state = initialState, action) => {
                 ...state,
                 packageName: action.packageName,
                 version: action.version,
-                isFetching: true
             }
         case RECEIVE_DEPENDENCIES:
             return {
                 ...state,
                 data: action.data,
-                isFetching: false
+            }
+        case SET_ERROR:
+            return {
+                ...state,
+                isError: action.isError
+            }
+        case SET_LOADING:
+            return {
+                ...state,
+                isLoading: action.isLoading
             }
         default:
             return state

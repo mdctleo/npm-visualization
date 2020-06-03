@@ -8,9 +8,14 @@ const selectDependencyData = createSelector(
     dependency => dependency.data
 )
 
-const selectisFetching = createSelector(
+const selectisLoading = createSelector(
     selectDependency,
-    dependency => dependency.isFetching
+    dependency => dependency.isLoading
 )
 
-export {selectDependency, selectDependencyData, selectisFetching}
+const selectisError = createSelector(
+    selectDependency,
+    dependency => dependency.isError
+)
+
+export {selectDependency, selectDependencyData, selectisLoading, selectisError}

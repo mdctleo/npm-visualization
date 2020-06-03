@@ -31,7 +31,7 @@ export class API {
             for (let [packageName, pack] of Object.entries(result.body)) {
                 mresult.start = result.body[packageName].start
                 mresult.end = result.body[packageName].end
-                // console.log(pack)
+
                 delete result.body[packageName].start
                 delete result.body[packageName].end
                 for (let dataPoint of pack.downloads) {
@@ -55,17 +55,6 @@ export class API {
 
     }
 
-    public async getRegistryMeta(): Promise<any> {
-        try {
-            let url = `${this.API_BASE}`
-            let response = await request.get(url)
-            // console.log(response.body)
-        } catch (err) {
-            console.log("failed to get registry meta")
-            console.log(err)
-        }
-    }
-
     public async getPackage (packageName: string, version: string): Promise<any> {
         try {
             let url = `${this.API_BASE}/${packageName}/${version}`
@@ -79,6 +68,10 @@ export class API {
 
     public async getDependencies(packageName: string, version: string, result: Set<string>): Promise<any> {
         try {
+            if (result.size > 200) {
+                throw new Error("Don't wanna wreck npm")
+            }
+
             let packageResponse = await Promise.all([this.getPackage(packageName, version), this.search(packageName)])
 
             let score: any = packageResponse[1].body.objects[0].score
@@ -114,8 +107,7 @@ export class API {
             return parentNode
 
         } catch (err) {
-            console.log("getDependencies failed")
-            console.log(err)
+            throw(err)
         }
     }
 
@@ -135,8 +127,7 @@ export class API {
             return response
 
         } catch (err) {
-            console.log("search failed")
-            console.log(err)
+            throw(err)
         }
 
     }

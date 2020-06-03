@@ -1,10 +1,11 @@
-import React from 'react';
-import { Input } from 'antd';
-import { connect } from 'react-redux'
-import {compose} from 'redux';
-import {fetchDependencies} from "./action";
-import {selectDependencyData} from "./selector";
-import * as d3 from 'd3'
+import React from "react";
+import { Input } from "antd";
+import { connect } from "react-redux"
+import {compose} from "redux";
+import {fetchDependencies, setError} from "./action";
+import {selectDependencyData, selectisError} from "./selector";
+import { Alert } from "antd";
+import * as d3 from "d3"
 
 const { Search } = Input;
 
@@ -15,7 +16,6 @@ class DependencyControls extends React.Component {
     }
 
     componentDidMount() {
-        // this.props.getDependencies("express", "latest")
         let ctx = this.canvas.getContext("2d")
         let grd = ctx.createLinearGradient(0, 0, 200, 0)
 
@@ -28,35 +28,48 @@ class DependencyControls extends React.Component {
     }
 
     render() {
-        console.log(d3.schemeRdYlGn[10])
+        const isError = this.props.isError
         return (
-            <div className="dependency-control">
-                <Search
-                    placeholder="input search text"
-                    onSearch={(value, event) => {
-                        this.props.getDependencies(value, "latest")
-                    }}
-                    style={{ width: 200, marginRight: 20}}
-                />
-                <div className="dependency-legend">
-                    <canvas ref={canvas => this.canvas = canvas} width="170" height="30"/>
-                    <span className="low">Low Score</span>
-                    <span className="high">High Score</span>
+            <div>
+                <div className="dependency-control">
+                    <Search
+                        placeholder="input search text"
+                        onSearch={(value, event) => {
+                            this.props.fetchDependencies(value, "latest")
+                        }}
+                        style={{width: 200, marginRight: 20}}
+                    />
+                    <div className="dependency-legend">
+                        <canvas ref={canvas => this.canvas = canvas} width="170" height="30"/>
+                        <span className="low">Low Score</span>
+                        <span className="high">High Score</span>
+                    </div>
                 </div>
+                {isError && <Alert
+                    className="alert"
+                    message="Error"
+                    description="Something went wrong, try refreshing the page and retry"
+                    type="error"
+                    showIcon
+                    closable
+                    onClose={(e) => {this.props.setError(false, "")}}
+                />}
             </div>
-        )
+    )
     }
 }
 
 const mapStateToProps = state => {
     return {
-        data: selectDependencyData(state)
+        data: selectDependencyData(state),
+        isError: selectisError(state)
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        getDependencies: (packageName, version) => dispatch(fetchDependencies(packageName, version))
+        fetchDependencies: (packageName, version) => dispatch(fetchDependencies(packageName, version)),
+        setError: (isError, message) => dispatch(setError(isError, message))
     }
 }
 

@@ -77,3 +77,8 @@ html {
   line-height: 37px;
   vertical-align: center;
 }
+
+.alert {
+  margin-top: 10px !important;
+  display: inline-block;
+}

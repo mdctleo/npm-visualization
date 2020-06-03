@@ -2,7 +2,7 @@ import React from "react";
 import * as d3 from 'd3'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {selectDependencyData, selectisFetching} from "../dependency-controls/selector";
+import {selectDependencyData, selectisLoading} from "../dependency-controls/selector";
 import {Spin} from "antd";
 
 class DependencyChart extends React.Component {
@@ -121,9 +121,9 @@ class DependencyChart extends React.Component {
 
 
     render() {
-        let isFetching = this.props.isFetching
+        let isLoading = this.props.isLoading
         return (
-            <Spin size="large" tip="This might take a while..." spinning={isFetching}>
+            <Spin size="large" tip="This might take a while..." spinning={isLoading}>
                 <svg ref={node => this.node = node}
                      width={this.props.width} height={this.props.height}>
                 </svg>
@@ -135,7 +135,7 @@ class DependencyChart extends React.Component {
 const mapStateToProps = state => {
     return {
         data: selectDependencyData(state),
-        isFetching: selectisFetching(state)
+        isLoading: selectisLoading(state)
     }
 }
 
