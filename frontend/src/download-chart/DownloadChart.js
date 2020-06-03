@@ -137,12 +137,11 @@ class DownloadChart extends React.Component {
     render() {
         const isFetching = this.props.isFetching
         return (
-            <div>
-                {isFetching && <Spin size="large"/>}
-                    <svg ref={node => this.node = node}
-                         width={this.props.width} height={this.props.height}>
-                    </svg>
-            </div>
+            <Spin size="large" tip="Loading..." spinning={isFetching}>
+                <svg ref={node => this.node = node}
+                     width={this.props.width} height={this.props.height}>
+                </svg>
+            </Spin>
         )
     }
 };

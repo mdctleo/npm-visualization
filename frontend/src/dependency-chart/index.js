@@ -1,12 +1,13 @@
 import React from "react";
 import * as d3 from 'd3'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import {selectDependencyData} from "../dependency-controls/selector";
+import {connect} from 'react-redux'
+import {compose} from 'redux'
+import {selectDependencyData, selectisFetching} from "../dependency-controls/selector";
+import {Spin} from "antd";
 
 class DependencyChart extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.createChart = this.createChart.bind(this)
         this.updateChart = this.updateChart.bind(this)
@@ -37,18 +38,10 @@ class DependencyChart extends React.Component {
         this.svg.attr("viewBox", [0, 0, this.width, x1 - x0 + this.root.dx * 2])
         this.g.attr("transform", `translate(${this.root.dy / 3},${this.root.dx - x0})`);
 
-        //
-        // this.cluster = d3.cluster()
-        //     .size([this.height, this.width - 100])
-        //
-        // this.root = d3.hierarchy(this.props.data, d => d.children)
-        // this.cluster(this.root)
-
         this.drawChart()
     }
 
     drawChart() {
-
         // Add the links between nodes:
 
         let link = this.g.selectAll('path')
@@ -62,12 +55,6 @@ class DependencyChart extends React.Component {
 
         link = link.merge(linkEnter)
         link
-            // .attr("d", d => {
-            //     return "M" + d.y + "," + d.x
-            //         + "C" + (d.parent.y + 30) + "," + d.x
-            //         + " " + (d.parent.y + 130) + "," + d.parent.x // 50 and 150 are coordinates of inflexion, play with it to change links shape
-            //         + " " + d.parent.y + "," + d.parent.x;
-            // })
             .attr("d", d3.linkHorizontal()
                 .x(d => d.y)
                 .y(d => d.x))
@@ -88,7 +75,6 @@ class DependencyChart extends React.Component {
 
         nodeEnter.append("text")
 
-
         node = node.merge(nodeEnter)
             .attr("transform", d => `translate(${d.y},${d.x})`)
 
@@ -103,8 +89,6 @@ class DependencyChart extends React.Component {
             .attr("x", d => d.children ? -9 : 9)
             .attr("text-anchor", d => d.children ? "end" : "start")
             .text(d => d.data.packageName)
-            .clone(true).lower()
-            .attr("stroke", "white")
 
     }
 
@@ -137,17 +121,21 @@ class DependencyChart extends React.Component {
 
 
     render() {
+        let isFetching = this.props.isFetching
         return (
-            <svg ref={node => this.node = node}
-                 width={this.props.width} height={this.props.height}>
-            </svg>
+            <Spin size="large" tip="This might take a while..." spinning={isFetching}>
+                <svg ref={node => this.node = node}
+                     width={this.props.width} height={this.props.height}>
+                </svg>
+            </Spin>
         )
     }
 };
 
 const mapStateToProps = state => {
     return {
-        data: selectDependencyData(state)
+        data: selectDependencyData(state),
+        isFetching: selectisFetching(state)
     }
 }
 
