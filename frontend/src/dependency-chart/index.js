@@ -2,7 +2,7 @@ import React from "react";
 import * as d3 from 'd3'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {selectDependencyData, selectisLoading} from "../dependency-controls/selector";
+import {selectDependencyData, selectDependencyLoading} from "../dependency-controls/selector";
 import {Spin} from "antd";
 
 class DependencyChart extends React.Component {
@@ -135,7 +135,7 @@ class DependencyChart extends React.Component {
 const mapStateToProps = state => {
     return {
         data: selectDependencyData(state),
-        isLoading: selectisLoading(state)
+        isLoading: selectDependencyLoading(state)
     }
 }
 

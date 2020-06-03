@@ -4,7 +4,7 @@ import {
     SET_SEARCH,
     GET_PCAKGE_DOWNLOAD,
     RECEIVE_PACKAGE_DOWNLOAD,
-    SET_COLOUR_SCALE
+    SET_COLOUR_SCALE,SET_DOWNLOAD_LOADING, SET_DOWNLOAD_ERROR
 } from "./action";
 import moment from 'moment';
 
@@ -18,12 +18,13 @@ import moment from 'moment';
 // }
 
 export const initialState = {
-    isFetching: false,
+    downloadLoading: false,
     start: "2016-01-01",
     end: "2016-03-01",
     packageNames: "",
     maxDownload: 100,
     downloadData: [],
+    downloadError: false
 }
 
 const inputs = (state = initialState, action) => {
@@ -47,14 +48,22 @@ const inputs = (state = initialState, action) => {
         case RECEIVE_PACKAGE_DOWNLOAD:
             return {
                 ...state,
-                isFetching: false,
                 maxDownload: action.maxDownload > state.maxDownload || state.maxDownload === undefined ? action.maxDownload : state.maxDownload,
                 downloadData: [...state.downloadData, ...action.data]
             }
         case GET_PCAKGE_DOWNLOAD:
             return {
                 ...state,
-                isFetching: true
+            }
+        case SET_DOWNLOAD_LOADING:
+            return {
+                ...state,
+                downloadLoading: action.isLoading
+            }
+        case SET_DOWNLOAD_ERROR:
+            return {
+                ...state,
+                downloadError: action.isError
             }
         default:
             return state

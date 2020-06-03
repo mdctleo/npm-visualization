@@ -61,8 +61,7 @@ export class API {
             let response = await request.get(url)
             return response
         } catch (err) {
-            console.log("get package version failed")
-            console.log(err)
+            throw err
         }
     }
 

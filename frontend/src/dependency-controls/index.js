@@ -2,8 +2,8 @@ import React from "react";
 import { Input } from "antd";
 import { connect } from "react-redux"
 import {compose} from "redux";
-import {fetchDependencies, setError} from "./action";
-import {selectDependencyData, selectisError} from "./selector";
+import {fetchDependencies, setDependencyError} from "./action";
+import {selectDependencyData, selectDependencyError} from "./selector";
 import { Alert } from "antd";
 import * as d3 from "d3"
 
@@ -62,14 +62,14 @@ class DependencyControls extends React.Component {
 const mapStateToProps = state => {
     return {
         data: selectDependencyData(state),
-        isError: selectisError(state)
+        isError: selectDependencyError(state)
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         fetchDependencies: (packageName, version) => dispatch(fetchDependencies(packageName, version)),
-        setError: (isError, message) => dispatch(setError(isError, message))
+        setError: (isError, message) => dispatch(setDependencyError(isError, message))
     }
 }
 

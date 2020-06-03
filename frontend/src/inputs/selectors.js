@@ -33,9 +33,14 @@ const selectMaxDownload = createSelector(
     inputs => inputs.maxDownload
 )
 
-const selectisFetching = createSelector(
+const selectDownloadLoading = createSelector(
     selectInputs,
-    inputs => inputs.isFetching
+    inputs => inputs.downloadLoading
+)
+
+const selectDownloadError = createSelector(
+    selectInputs,
+    inputs => inputs.downloadError
 )
 
 
@@ -46,4 +51,6 @@ export {
     selectDownloadData,
     selectMaxDownload,
     selectColourScale,
-    selectisFetching}
+    selectDownloadLoading,
+    selectDownloadError
+}

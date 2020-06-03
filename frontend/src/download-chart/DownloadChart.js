@@ -8,7 +8,7 @@ import {
     selectDownloadData,
     selectStartDate,
     selectEndDate,
-    selectisFetching
+    selectDownloadLoading
 } from "../inputs/selectors";
 import {Spin} from "antd";
 
@@ -135,9 +135,9 @@ class DownloadChart extends React.Component {
     }
 
     render() {
-        const isFetching = this.props.isFetching
+        const isLoading = this.props.isLoading
         return (
-            <Spin size="large" tip="Loading..." spinning={isFetching}>
+            <Spin size="large" tip="Loading..." spinning={isLoading}>
                 <svg ref={node => this.node = node}
                      width={this.props.width} height={this.props.height}>
                 </svg>
@@ -159,7 +159,7 @@ const mapStateToProps = state => {
         start: selectStartDate(state),
         end: selectEndDate(state),
         maxDownload: selectMaxDownload(state),
-        isFetching: selectisFetching(state)
+        isLoading: selectDownloadLoading(state)
     }
 }
 
