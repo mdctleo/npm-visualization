@@ -16,7 +16,12 @@ export class API {
 
         let result = await request.get(url)
 
-        let mresult = {
+        let mresult: {
+            maxCount: number,
+            start: string,
+            end: string,
+            data: Array<any>
+        } = {
             maxCount: 0,
             start: "",
             end: "",
@@ -28,7 +33,10 @@ export class API {
 
         if (packageNames.split(",").length > 1) {
 
-            for (let [packageName, pack] of Object.entries(result.body)) {
+            // for (let [packageName, pack] of Object.entries(result.body)) {
+            for (let i = 0; i < Object.entries(result.body).length;i++) {
+                let packageName: string = Object.entries(result.body)[i][0]
+                let pack: any = Object.entries(result.body)[i][1]
                 mresult.start = result.body[packageName].start
                 mresult.end = result.body[packageName].end
 
@@ -91,7 +99,7 @@ export class API {
             for (let i = 0; i < dependencies.length; i++) {
                 let dependencyName = dependencies[i][0]
                 let dependencyVersion = dependencies[i][1]
-                let dependencyVersionFormatted = pat.exec(dependencyVersion);
+                let dependencyVersionFormatted: any = pat.exec(dependencyVersion);
 
                 // does not include dependencies that has already appeared once in other packages? not sure if
                 // it is the best approach

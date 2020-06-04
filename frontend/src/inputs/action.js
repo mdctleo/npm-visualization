@@ -1,4 +1,5 @@
 import * as request from "superagent"
+import {API_BASE} from "../API";
 
 export const GET_PCAKGE_DOWNLOAD = 'GET_PACKAGE_DOWNLOAD'
 export const RECEIVE_PACKAGE_DOWNLOAD = 'RECEIVE_PACKAGE_DOWNLOAD'
@@ -70,7 +71,7 @@ export const fetchPackagesDownload = (packageNames, start, end) => {
     return dispatch => {
         dispatch(setDownloadLoading(true))
         dispatch(getPackageDownload(packageNames, start, end))
-        let url = "http://localhost:8000/getDownloads"
+        let url = `/getDownloads`
         return request.get(url)
             .query(`packageName=${packageNames}`)
             .query(`start=${start}`)

@@ -1,4 +1,5 @@
 import * as request from "superagent";
+import {API_BASE} from "../API";
 
 export const GET_DEPENDENCIES = 'GET_DEPENDENCIES'
 export const RECEIVE_DEPENDENCIES = 'RECEIVE_DEPENDENCIES'
@@ -40,7 +41,7 @@ export const fetchDependencies = (packageName, version) => {
     return dispatch => {
         dispatch(setDependencyLoading(true))
         dispatch(getDependencies(packageName, version))
-        let url = "http://localhost:8000/getDependencies"
+        let url = `/getDependencies`
         return request.get(url)
             .query(`packageName=${packageName}`)
             .query(`version=${version}`)

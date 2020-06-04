@@ -2,12 +2,13 @@ import {API} from "./api";
 import express from "express";
 import cors from "cors"
 import {DependencyNode} from "./Node";
+import * as path from "path";
 
 const app = express();
 const port = 8000
 // TODO: disable this for production
-app.use(cors())
-
+// app.use(cors())
+app.use(express.static(path.join(__dirname, '/frontend/build')))
 const DOWNLOAD_API = `https://api.npmjs.org/downloads`
 const API_BASE = `https://registry.npmjs.org`
 
