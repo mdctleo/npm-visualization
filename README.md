@@ -1,4 +1,4 @@
-# npm-visualization
+# npm-visualization 📈 🛠️
 
 ### Introduction
 Some visualizations of packages in the npm registry to help developers to choose their dependencies. This utilizes the npm registry public
