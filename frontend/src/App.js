@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import 'antd/dist/antd.css'
-import DownloadChart from "./download-chart/DownloadChart"
+import DownloadChart from "./download-chart/index"
 import Inputs from "./inputs/index"
 import Tags from "./tags";
 import DependencyControls from "./dependency-controls";

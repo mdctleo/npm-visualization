@@ -7,7 +7,7 @@ export const SET_COLOUR_SCALE = 'SET_COLOUR_SCALE'
 
 export const SET_DATE = 'SET_DATE'
 export const SET_SEARCH = 'SET_SERACH'
-export const DELET_SEARCH = 'DELET_SEARCH'
+export const DELETE_DOWNLOAD_SEARCH = 'DELETE_DOWNLOAD_SEARCH'
 
 export const SET_DOWNLOAD_ERROR = 'SET_DOWNLOAD_ERROR'
 export const SET_DOWNLOAD_LOADING = 'SET_DOWNLOAD__LOADING'
@@ -24,8 +24,8 @@ export const setSearchTerm = (packageName) => ({
     packageName
 })
 
-export const deleteSearch = (packageName) => ({
-    type: DELET_SEARCH,
+export const deleteDownloadSearch = (packageName) => ({
+    type: DELETE_DOWNLOAD_SEARCH,
     packageName
 })
 

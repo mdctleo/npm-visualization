@@ -37,6 +37,7 @@ export class API {
             for (let i = 0; i < Object.entries(result.body).length;i++) {
                 let packageName: string = Object.entries(result.body)[i][0]
                 let pack: any = Object.entries(result.body)[i][1]
+                // the start and end are always same for all packages
                 mresult.start = result.body[packageName].start
                 mresult.end = result.body[packageName].end
 
@@ -53,10 +54,10 @@ export class API {
             for (let dataPoint of result.body.downloads) {
                 maxCount = dataPoint.downloads > maxCount ? dataPoint.downloads : maxCount
             }
-            data = [{package: result.body.package, downloads: result.body.downloads}]
+            data = [{package: result.body.package, downloads: result.body.downloads, maxDownload: maxCount}]
         }
 
-        mresult.maxCount = maxCount
+        // mresult.maxCount = maxCount
         mresult.data = data
 
         return mresult

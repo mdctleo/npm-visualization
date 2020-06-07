@@ -1,5 +1,5 @@
 import {
-    DELET_SEARCH,
+    DELETE_DOWNLOAD_SEARCH,
     SET_DATE,
     SET_SEARCH,
     GET_PCAKGE_DOWNLOAD,
@@ -48,7 +48,8 @@ const inputs = (state = initialState, action) => {
         case RECEIVE_PACKAGE_DOWNLOAD:
             return {
                 ...state,
-                maxDownload: action.maxDownload > state.maxDownload || state.maxDownload === undefined ? action.maxDownload : state.maxDownload,
+                // maxDownload: action.maxDownload > state.maxDownload || state.maxDownload === undefined ? action.maxDownload : state.maxDownload,
+                maxDownload: getMaxDownload([...state.downloadData, ...action.data]),
                 downloadData: [...state.downloadData, ...action.data]
             }
         case GET_PCAKGE_DOWNLOAD:
@@ -65,9 +66,33 @@ const inputs = (state = initialState, action) => {
                 ...state,
                 downloadError: action.isError
             }
+        case DELETE_DOWNLOAD_SEARCH:
+            let i = state.downloadData.findIndex(d => d.package === action.packageName)
+            let packageNamesArr = state.packageNames.split(",")
+            let j = packageNamesArr.findIndex(name => name === action.packageName)
+            let newDownloadData = [...state.downloadData.slice(0, i), ...state.downloadData.slice(i+1, state.downloadData.length)]
+            return {
+                ...state,
+                maxDownload: getMaxDownload(newDownloadData),
+                downloadData: [...state.downloadData.slice(0, i), ...state.downloadData.slice(i+1, state.downloadData.length)],
+                packageNames: packageNamesArr.slice(0, j).concat(packageNamesArr.slice(j+1, packageNamesArr.length)).join()
+            }
         default:
             return state
     }
+}
+
+const getMaxDownload = (data) => {
+    let maxDownload = Number.MIN_SAFE_INTEGER
+
+    data.forEach((pack) => {
+        if (pack.maxDownload > maxDownload) {
+            maxDownload = pack.maxDownload
+        }
+    })
+
+    return maxDownload
+
 }
 
 export default inputs
