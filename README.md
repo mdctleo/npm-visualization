@@ -12,4 +12,4 @@ Visualizations of packages in the npm registry to help developers to choose thei
 
 
 ### Contribute
-Feel free to contribute. The repo uses react for front end, express with typescript for back end and is currently hosted on aws.
+Feel free to contribute. The repo uses React for front end, Express with Typescript for back end and is currently hosted on aws.
