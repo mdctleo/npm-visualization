@@ -6,7 +6,6 @@ import {
     RECEIVE_PACKAGE_DOWNLOAD,
     SET_COLOUR_SCALE,SET_DOWNLOAD_LOADING, SET_DOWNLOAD_ERROR
 } from "./action";
-import moment from 'moment';
 
 // export const initialState = {
 //     isFetching: false,
@@ -27,7 +26,7 @@ export const initialState = {
     downloadError: false
 }
 
-const inputs = (state = initialState, action) => {
+const downloads = (state = initialState, action) => {
     switch (action.type) {
         case SET_DATE:
             return {
@@ -95,4 +94,4 @@ const getMaxDownload = (data) => {
 
 }
 
-export default inputs
+export default downloads

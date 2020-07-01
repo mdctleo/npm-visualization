@@ -25,10 +25,10 @@ function App() {
             <Tags/>
             <DownloadChart width={960} height={500} margin={{top: 20, right: 80, bottom: 30, left: 50}}/>
             <h2>Dependency graph</h2>
-            <p className="intro"> In this visualization, we visualize a package and all its dependencies (including dependencies'
+            <p className="intro"> In this visualization, we fetch a package and all its dependencies (including dependencies'
                 dependencies).
                 <br />
-                This helps us to make a more conscious decisions when deciding to use a package, the score of
+                This helps us to make a more conscious decision when deciding to use a package, the score of
                 each package is a score from the npm registry.
             </p>
             <DependencyControls/>

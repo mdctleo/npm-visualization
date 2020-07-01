@@ -1,46 +1,46 @@
 import { createSelector } from 'reselect'
 import { initialState } from './reducer'
 
-const selectInputs = state => state.inputs || initialState
+const selectDownloads = state => state.downloads || initialState
 
 const selectStartDate = createSelector(
-    selectInputs,
-    inputs => inputs.start
+    selectDownloads,
+    downloads => downloads.start
 )
 
 const selectEndDate = createSelector(
-    selectInputs,
-    inputs => inputs.end
+    selectDownloads,
+    downloads => downloads.end
 )
 
 const selectPackageNames = createSelector(
-    selectInputs,
-    inputs => inputs.packageNames.length > 0? inputs.packageNames.split(",") : []
+    selectDownloads,
+    downloads => downloads.packageNames.length > 0? downloads.packageNames.split(",") : []
 )
 
 const selectColourScale = createSelector(
-    selectInputs,
-    inputs => inputs.colourScale
+    selectDownloads,
+    downloads => downloads.colourScale
 )
 
 const selectDownloadData = createSelector(
-    selectInputs,
-    inputs => inputs.downloadData
+    selectDownloads,
+    downloads => downloads.downloadData
 )
 
 const selectMaxDownload = createSelector(
-    selectInputs,
-    inputs => inputs.maxDownload
+    selectDownloads,
+    downloads => downloads.maxDownload
 )
 
 const selectDownloadLoading = createSelector(
-    selectInputs,
-    inputs => inputs.downloadLoading
+    selectDownloads,
+    downloads => downloads.downloadLoading
 )
 
 const selectDownloadError = createSelector(
-    selectInputs,
-    inputs => inputs.downloadError
+    selectDownloads,
+    downloads => downloads.downloadError
 )
 
 
