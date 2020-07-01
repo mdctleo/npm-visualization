@@ -1,8 +1,8 @@
 import React from 'react';
 import {Tag} from 'antd';
 import { connect } from 'react-redux'
-import {selectColourScale, selectPackageNames} from '../inputs/selectors'
-import {deleteDownloadSearch} from "../inputs/action";
+import {selectColourScale, selectPackageNames} from '../download-controls/selectors'
+import {deleteDownloadSearch} from "../download-controls/action";
 
 
 const Tags = ({packageNames, colourScale, deleteDownloadSearch}) => {

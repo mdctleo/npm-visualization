@@ -2,14 +2,14 @@ import React from "react";
 import * as d3 from 'd3'
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {setColourScale} from "../inputs/action";
+import {setColourScale} from "../download-controls/action";
 import {
     selectMaxDownload,
     selectDownloadData,
     selectStartDate,
     selectEndDate,
     selectDownloadLoading
-} from "../inputs/selectors";
+} from "../download-controls/selectors";
 import {Spin} from "antd";
 
 class DownloadChart extends React.Component {
@@ -27,10 +27,6 @@ class DownloadChart extends React.Component {
     componentDidMount() {
         this.createDownloadChart()
     }
-
-    // componentWillUpdate(prevProps, prevState, snapShot) {
-    //     this.updateDownloadChart()
-    // }
 
     componentDidUpdate(prevProps, prevState, snapShot) {
         this.updateDownloadChart()

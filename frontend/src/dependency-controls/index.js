@@ -35,7 +35,7 @@ class DependencyControls extends React.Component {
                     <Search
                         placeholder="input search text"
                         onSearch={(value, event) => {
-                            this.props.fetchDependencies(value, "latest")
+                            this.props.fetchDependencies(value.toLowerCase(), "latest")
                         }}
                         style={{width: 200, marginRight: 20}}
                     />

@@ -28,7 +28,7 @@ class Inputs extends React.Component {
                     <Search
                         placeholder="input search text"
                         onSearch={(value, event) => {
-                            this.props.setSearchTerm(value)
+                            this.props.setSearchTerm(value.toLowerCase())
                             this.props.fetchPackagesDownload(value, this.props.start, this.props.end)
                         }}
                         style={{width: 200, marginRight: 20}}
