@@ -15,15 +15,15 @@ Visualizations of packages in the npm registry to help developers to choose thei
 Feel free to contribute. The repo uses React for front end, Express with Typescript for back end and is currently hosted on aws.
 
 #### Front end
-'''
+```
 yarn install
 cd frontend
 yarn start
-'''
+```
 
 #### Back end
 Remember to enable CORS
-'''
+```
 npm install
 npm run dev
-'''
+```
